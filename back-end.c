@@ -2,3 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+typedef struct bikeSharingCDT {
+    
+
+}bikeSharingCDT;
