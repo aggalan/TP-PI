@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-int main()
+int main(int argc, char * argv[])
 {
     FILE * fp;
     char str[60];
@@ -11,9 +11,12 @@ int main()
     char *token;
     int i = 0;
 
-
+    if (argc > 2 || argc < 2) {
+        perror("Error in the amount of parameters");
+        return 1;
+    }
    
-        fp = fopen("stationsMON.csv" , "r");
+        fp = fopen(argv[1] , "r");
 
         if(fp == NULL) 
         {
