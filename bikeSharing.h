@@ -8,6 +8,17 @@
 typedef struct bikeSharingCDT * bikeSharingADT;
 
 
+typedef struct idArray
+{
+
+    size_t id;
+    char * station_name;
+    size_t member_trips;
+    int months[12];
+
+}idArray;
+
+
 /*libera toda memoria reservada por el TAD*/
 void freeBikeSharing(bikeSharingADT bikeSharing);
 
@@ -38,7 +49,8 @@ int * q4();
 /*crea un vector que relaciona el id, el nombre, los viajes de los miembros, y un vector de 12 posiciones que contenga la cant de viajes x mes de las estaciones con una posicion de la matriz (chequear toArray)
  hacer la matriz al mismo tiempo 
  */
-struct * makeIdArray(); //esta mal como definimos lo qeu devuelve. 
+
+void makeIdArray(idArray * vec, TList list, size_t size);
 
 /*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
 int getIndice();
