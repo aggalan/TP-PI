@@ -34,6 +34,11 @@ typedef struct bikeSharingCDT {
     TList first;
 }bikeSharingCDT;
 
+bikeSharingADT newBikeSharing() {
+    return calloc(1, sizeof(bikeSharingCDT));
+}
+
+
 static TList addStationRec (TList list, char * station_name, int id) {
     int c;
     if (list == NULL || (c = strcmp(station_name, list->station_name)) < 0) {
