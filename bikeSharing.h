@@ -53,10 +53,10 @@ int * q4();
 void makeIdArray(idArray * vec, TList list, size_t size);
 
 /*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
-int getIndice();
+int getIndex(int id, int * vec, size_t dim);
 
 /*ordena de manera descendientemente por cantidad de viajes*/
-void sort();
+void sort(size_t dim, int * vec);
 
 
 
