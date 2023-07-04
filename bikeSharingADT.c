@@ -12,7 +12,7 @@ static enum months {JAN = 0, FEB, MAR, APR, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
 typedef struct trips {
     char end_station_name[MAX_LETTERS];
-    int year;
+    size_t trips;
 } Ttrip;
 
 typedef struct node {
@@ -20,14 +20,15 @@ typedef struct node {
     double latitude;
     double longitude;
     char station_name[MAX_LETTERS];
-    size_t total_trips; //Viajes comenzados en esta estacion
+    size_t total_trips;
+    size_t circular_trips;
     size_t trips_per_month[MONTHS];
-    Ttrip * first; //Lista de estaciones que tienen un trip de la forma node->estacion
+    Ttrip * first;
     struct node  * tail;
 }TNode;
 
 typedef TNode * TList;
 
 typedef struct bikeSharingCDT {
-    TList first; // Primera estacion
+    TList first;
 }bikeSharingCDT;
