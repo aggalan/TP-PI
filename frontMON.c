@@ -69,7 +69,8 @@ int main(int argc, char * argv[])
                         strcpy(sName, token);
                     }
 
-                    token = strtok(NULL, s);    
+                    token = strtok(NULL, s); 
+                    i++;
                 }
 
             // call the add station in the backend
