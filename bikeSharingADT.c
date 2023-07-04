@@ -33,7 +33,12 @@ typedef struct bikeSharingCDT {
 }bikeSharingCDT;
 
 bikeSharingADT newBikeSharing() {
-    calloc(1, sizeof(bikeSharingCDT));
+    errno = 0;
+    bikeSharingADT new = calloc(1, sizeof(bikeSharingCDT));
+    if (errno == ENOMEM) {
+            perror("Insufficient memory");
+            exit(1);
+    }
 }
 
 
