@@ -18,8 +18,6 @@ typedef struct trips {
 
 typedef struct node {
     int id;
-    double latitude;
-    double longitude;
     char station_name[MAX_LETTERS];
     size_t total_trips;
     size_t circular_trips;
