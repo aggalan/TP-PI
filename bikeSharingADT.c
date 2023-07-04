@@ -33,7 +33,7 @@ typedef struct bikeSharingCDT {
 }bikeSharingCDT;
 
 bikeSharingADT newBikeSharing() {
-    return calloc(1, sizeof(bikeSharingCDT));
+    calloc(1, sizeof(bikeSharingCDT));
 }
 
 
