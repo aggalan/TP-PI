@@ -34,7 +34,7 @@ int main(int argc, char * argv[])
         // pass each station data to parameters and send it to backend
 
 
-    if (argc > 3 || argc < 3) 
+    if (argc > 5 || argc < 4) 
     {
         // if command line arguments dont match the requirements, send message
 

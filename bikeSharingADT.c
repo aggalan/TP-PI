@@ -101,7 +101,7 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 
 idArray * makeIdArray(size_t size)
 {
-    
+
 }
 
 void fillIdArray(idArray * vec, TList list)
@@ -120,19 +120,29 @@ void fillIdArray(idArray * vec, TList list)
 }
 
 
+int getIndex(int id, int * vec, size_t dim)
+{
 
-int getIndex(int id, int * vec, size_t dim){
-    for(int i=0; i < dim; i++){
+    for(int i=0; i < dim; i++)
+    {
+    
     if(id == vec[i])
         return i;
-}
+    }
+
 return -1;
+
 }
 
-void sort(size_t dim,  int * vec){
-    for (int i = 0; i < dim - 1; i++) {
-        for (int j = 0; j < dim - i - 1; j++) {
-            if (vec[j] < vec[j + 1]) {
+void sort(size_t dim,  int * vec)
+{
+
+    for (int i = 0; i < dim - 1; i++) 
+    {
+        for (int j = 0; j < dim - i - 1; j++) 
+        {
+            if (vec[j] < vec[j + 1]) 
+            {
                 // Intercambiar los elementos
                 int aux = vec[j];
                 vec[j] = vec[j + 1];
@@ -140,6 +150,11 @@ void sort(size_t dim,  int * vec){
             }
         }
     }
+}
+
+void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month)
+{
+    
 }
 
 

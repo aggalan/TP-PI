@@ -50,7 +50,7 @@ int * q4();
  hacer la matriz al mismo tiempo 
  */
 
-void makeIdArray(size_t size);
+idArray * makeIdArray(size_t size);
 
 void fillIdArray(idArray * vec, TList list);
 
