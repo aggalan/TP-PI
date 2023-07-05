@@ -18,7 +18,7 @@ bikeSharingADT newBikeSharing();
 void addStation(bikeSharingADT bikeSharing, char * station, int id);
 
 /*Almacena un nuevo viaje. Addtrip deberia cargar el viaje de destino y origen a la matriz*/ 
-void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month);
+void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear);
 
 
 //chequear que devuelven las funciones de query(tiene sentido que devuelva un nuevo vector para podedr imprimir lindo)
