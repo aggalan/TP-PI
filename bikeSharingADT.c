@@ -121,3 +121,27 @@ void fillIdArray(idArray * vec, TList list)
 
 
 
+int getIndex(int id, int * vec, size_t dim){
+    for(int i=0; i < dim; i++){
+    if(id == vec[i])
+        return i;
+}
+return -1;
+}
+
+void sort(size_t dim,  int * vec){
+    for (int i = 0; i < dim - 1; i++) {
+        for (int j = 0; j < dim - i - 1; j++) {
+            if (vec[j] < vec[j + 1]) {
+                // Intercambiar los elementos
+                int aux = vec[j];
+                vec[j] = vec[j + 1];
+                vec[j + 1] = aux;
+            }
+        }
+    }
+}
+
+
+
+
