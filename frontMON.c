@@ -83,25 +83,62 @@ int main(int argc, char * argv[])
 
     char * date_delim = '-';
     char * date_token;
-    int startYear, startMonth;
+    int start_year, start_month;
     size_t start_id, end_id;
     char is_member;
 
-    prepare_data_for_trips(bikeSharing);
+    int limit_start_year, limit_end_year; 
 
+    if (argc < 3) {
+        limit_start_year = limit_end_year = -1;
+    }
+    else if (argc == 3) {
+        limit_start_year = argv[3];
+        limit_end_year = -1;
+    }
+    else if (argc == 4) {
+        limit_start_year = argv[3];
+        limit_end_year = argv[4];
+    }
+
+    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
+
+    i=0;
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
-        i=0;
         token = strtok(str, s);
         while (token != NULL) 
         {
             switch(i) {
                 case 0:
-                    for (int i=0; i<2; i++) {
+                    int j;
+                    for (int j=0; j<2; j++) { // Arreglar este magic number !
                         date_token = strtok(token, date_delim);
-                        startYear = atoi(date_token);
+                        if (j == 0) {
+                            start_year = atoi(date_token);
+                        }
+                        else{
+                            start_month = atoi(date_token);
+                        }
                     }
+                    break;
+
+                case 1:
+                    start_id = atoi(token);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    end_id = atoi(token);
+                    break;
+                case 4:
+                    is_member = atoi(token);
+                    break;
             }
+            i++;
+            
+
+            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
         }
     }
 }
