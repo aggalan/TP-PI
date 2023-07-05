@@ -145,7 +145,7 @@ int getIndex(int id, idArray * vec, size_t dim)
     for(int i=0; i < dim; i++)
     {
     
-    if(id == vec[i])
+    if(id == vec[i].id)
         return i;
     }
 
