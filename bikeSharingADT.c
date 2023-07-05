@@ -198,11 +198,5 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 
 
 
-/*crea un vector que relaciona el id, el nombre, los viajes de los miembros, y un vector de 12 posiciones que contenga la cant de viajes x mes de las estaciones con una posicion de la matriz (chequear toArray)
- hacer la matriz al mismo tiempo 
- */
-
-/*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
-int getIndex(int id, int * vec, size_t dim);
 
 
