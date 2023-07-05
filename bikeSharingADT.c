@@ -139,7 +139,7 @@ void prepare_data_for_trips(bikeSharingADT bs)
 
 
 
-int getIndex(int id, int * vec, size_t dim)
+int getIndex(int id, idArray * vec, size_t dim)
 {
 
     for(int i=0; i < dim; i++)
