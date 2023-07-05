@@ -99,8 +99,23 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 }
 
 
-void makeIdArray(idArray * vec, TList list, size_t size)
+idArray * makeIdArray(size_t size)
 {
+    
+}
+
+void fillIdArray(idArray * vec, TList list)
+{
+    TList aux = list;
+    int i = 0;
+
+    while(aux != NULL)
+    {
+        strcpy(vec[i].station_name, aux->station_name);
+        vec[i].id = aux->id;
+        aux = aux->tail;
+        i++;
+    }
 
 }
 
