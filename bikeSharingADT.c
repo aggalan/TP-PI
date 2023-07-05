@@ -224,6 +224,18 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 }
 
 
+struct q1_struct * q1(bikeSharingADT bikeSharing){
+    errno = 0;
+    struct q1_struct * vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
+    if(errno == ENOMEM){
+        perror("Error alocando memoria"); //preguntar
+    }
+    for(int i = 0; i < bikeSharing->cant; i++){
+        vec1[i].trips = bikeSharing->vec[i].member_trips;
+        strcpy(vec1[i].station_name, bikeSharing->vec[i].station_name);
+    }
 
+    return vec1;
 
+} 
 
