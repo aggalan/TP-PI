@@ -21,31 +21,14 @@ static enum months { JAN = 0,
                      NOV,
                      DEC };
 
-/*
-
-typedef struct trips {
-    char end_station_name[MAX_LETTERS];
-    size_t trips;
-} Ttrip;
-
-*/
-
-typedef struct idArray
-{
-
-    size_t id;
-    char * station_name;
-    size_t member_trips;
-    int months[12];
-
-}idArray;
-
 typedef struct node
 {
-
     size_t id;
+    int index;
+    int months[12];
     char station_name[MAX_LETTERS];
-    struct node * tail;
+    size_t member_trips;
+    struct node *tail;
 
 } TNode;
 
@@ -55,14 +38,13 @@ typedef struct bikeSharingCDT
 {
     TList first; // puntero a la primera estacion
     size_t cant; // cantidad de estaciones
-    idArray * vec;
     int ** matrix;
 
 } bikeSharingCDT;
 
 bikeSharingADT newBikeSharing()
 {
-    errno = 0; // creo que se inicializa en 0
+    errno = 0;
 
     bikeSharingADT new = calloc(1, sizeof(bikeSharingCDT));
 
@@ -76,15 +58,14 @@ bikeSharingADT newBikeSharing()
 
 void freeBikeSharing(bikeSharingADT bs)
 {
-	TList curr = bs->first, aux;
+    TList curr = bs->first, aux;
 
-	while (curr != NULL) {
-		aux = curr->tail;
-		free(curr);
-		curr = aux;
-	}
-
-    free(bs->vec);
+    while (curr != NULL)
+    {
+        aux = curr->tail;
+        free(curr);
+        curr = aux;
+    }
 
     /*
 
@@ -96,7 +77,7 @@ void freeBikeSharing(bikeSharingADT bs)
     */
 
     free(bs->matrix);
-	free(bs);
+    free(bs);
 }
 
 static TList addStationRec(TList list, char *station_name, int id)
@@ -104,7 +85,7 @@ static TList addStationRec(TList list, char *station_name, int id)
     int c;
     if (list == NULL || (c = strcmp(station_name, list->station_name)) < 0)
     {
-        errno = 0; // errno ya empieza en 0?
+        errno = 0;
         TList new = malloc(sizeof(TNode));
 
         if (errno == ENOMEM)
@@ -113,7 +94,16 @@ static TList addStationRec(TList list, char *station_name, int id)
         }
 
         new->id = id;
+
         strcpy(new->station_name, station_name); // chequear si se puede hacer esto
+
+        new->member_trips = 0; // inicializo los viajes de miembros en 0
+
+        for (int i = 0; i < MONTHS; i++)
+        {
+            new->months[i] = 0; // inicializo los viajes del mes en 0
+        }
+
         new->tail = list;
         return new;
     }
@@ -133,66 +123,68 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
     bikeSharing->cant++;
 }
 
-
 // validar los allocs
 
-void prepare_data_for_trips(bikeSharingADT bs)
+void setMatrix(bikeSharingADT bs)
 {
+    // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
+
     int i;
     errno = 0;
-    bs->vec = malloc(bs->cant * sizeof(idArray));
 
-    if(errno == ENOMEM){
-        return NULL; //preguntar
-    }
-    bs->matrix = malloc(bs->cant * sizeof(int *));
+    bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
 
-    if(errno == ENOMEM){
-        return NULL; //preguntar
+    if (errno == ENOMEM)
+    {
+        return NULL;
     }
 
     TList aux = bs->first;
 
-    for(i = 0; i < bs->cant; i++)
+    for (i = 0; i < bs->cant; i++) // como ya esta ordenado alfabeticamente directamente pongo el index
     {
-        bs->matrix[i]= calloc(bs->cant, sizeof(int));
+        bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
 
-        bs->vec[i].station_name = malloc(MAX_LETTERS);
-
-        bs->vec[i].id = aux->id;
-        strcpy(bs->vec[i].station_name, aux->station_name);
-        bs->vec[i].member_trips = 0;
-
-        for(int j = 0; j < 12; j++)
-        bs->vec[i].months[j] = 0;
-
-        aux = aux -> tail;
-    }
-
-}
-
-
-
-int getIndex(int id, idArray * vec, size_t dim)
-{
-
-    for(int i=0; i < dim; i++)
-    {
-       if(id == vec[i].id)
-         return i;
-    }
-
-return -1;
-}
-
-void sort(size_t dim,  int * vec)
-{
-
-    for (int i = 0; i < dim - 1; i++) 
-    {
-        for (int j = 0; j < dim - i - 1; j++) 
+        if (errno == ENOMEM)
         {
-            if (vec[j] < vec[j + 1]) 
+            return NULL;
+        }
+
+        aux->index = i;
+
+        aux = aux->tail;
+    }
+}
+
+TList getIndex(int id, TList first, int *index) // devuelve el nodo de la estacion solicitada y el index en un parametro de salida
+{
+
+    TList aux = first;
+
+    while (aux != NULL)
+    {
+        if (id == aux->id)
+
+            *index = aux->index;
+
+        return aux; // si matchea el id devuelvo la direccion del nodo y el index en la matriz
+
+        aux = aux->tail;
+    }
+
+    return NULL;
+}
+
+// nose si va a hacer falta sort
+
+void sort(size_t dim, int *vec)
+{
+
+    for (int i = 0; i < dim - 1; i++)
+    {
+        for (int j = 0; j < dim - i - 1; j++)
+        {
+            if (vec[j] < vec[j + 1])
             {
                 // Intercambiar los elementos
                 int aux = vec[j];
@@ -203,44 +195,51 @@ void sort(size_t dim,  int * vec)
     }
 }
 
-
-void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear) 
+void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear)
 {
     int idxStart, idxEnd;
+    TList sAux, eAux;
 
-    //Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
-    if ((idxStart = getIndex(startId, bikeSharing->vec, bikeSharing->cant)) == -1 || (idxEnd = getIndex(endId, bikeSharing->vec, bikeSharing->cant)) == -1) {
+    // Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
+    if ((sAux = getIndex(startId, bikeSharing->first, &idxStart)) == NULL || (eAux = getIndex(endId, bikeSharing->first, &eAux)) == NULL)
+    {
         return;
     }
 
-    //Si es miembro agregamos el viaje al vector
-    if (isMember) {
-        bikeSharing->vec[idxStart].member_trips++;
+    // Si es miembro agregamos el viaje a la estacion
+    if (isMember)
+    {
+        sAux->member_trips++;
     }
 
-    //Agregamos viaje al vector por mes
-    bikeSharing->vec[idxStart].months[month]++;
+    // Agregamos viaje a la estacion por mes
+    sAux->months[month]++;
 
-    //Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
-    if (startId != endId || (startId == endId && year >= sYear && year <= eYear)) {
-       bikeSharing->matrix[idxStart][idxEnd]++;
+    // Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
+    if (startId != endId || (startId == endId && year >= sYear && year <= eYear))
+    {
+        bikeSharing->matrix[idxStart][idxEnd]++;
     }
-    
 }
 
+/*   CORREGIR PARA ESTOS CAMBIOS
 
-struct q1_struct * q1(bikeSharingADT bikeSharing){
+struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
+{
     errno = 0;
-    struct q1_struct * vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
-    if(errno == ENOMEM){
-        return NULL; //preguntar
+    struct q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
+    if (errno == ENOMEM)
+    {
+        return NULL; // preguntar
     }
-    for(int i = 0; i < bikeSharing->cant; i++){
+    for (int i = 0; i < bikeSharing->cant; i++)
+    {
         vec1[i].trips = bikeSharing->vec[i].member_trips;
         strcpy(vec1[i].station_name, bikeSharing->vec[i].station_name);
     }
 
     return vec1;
+}
 
-} 
+*/
 

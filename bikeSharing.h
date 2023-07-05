@@ -8,6 +8,8 @@
 
 typedef struct bikeSharingCDT * bikeSharingADT;
 
+typedef struct node * TList;
+
 typedef struct q1_struct {
     char * station_name;
     size_t trips;
@@ -30,6 +32,12 @@ void freeBikeSharing(bikeSharingADT bikeSharing);
 
 /*Retorna un nuevo bikesharing. Al principio esta vacio*/
 bikeSharingADT newBikeSharing();
+
+void setMatrix(bikeSharingADT bs);
+
+TList getIndex(int id, TList first, int *index);
+
+static TList addStationRec(TList list, char *station_name, int id);
 
 /*Almacena una nueva estacion en orden alfabetico el TAD*/
 void addStation(bikeSharingADT bikeSharing, char * station, int id);
