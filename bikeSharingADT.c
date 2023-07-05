@@ -68,8 +68,7 @@ bikeSharingADT newBikeSharing()
 
     if (errno == ENOMEM)
     {
-        perror("Insufficient memory");
-        exit(1);
+        return NULL;
     }
 
     return new;
@@ -110,8 +109,7 @@ static TList addStationRec(TList list, char *station_name, int id)
 
         if (errno == ENOMEM)
         {
-            perror("Insufficient memory");
-            exit(1); // no pude exitiar creo
+            return NULL;
         }
 
         new->id = id;
@@ -141,8 +139,17 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 void prepare_data_for_trips(bikeSharingADT bs)
 {
     int i;
+    errno = 0;
     bs->vec = malloc(bs->cant * sizeof(idArray));
+
+    if(errno == ENOMEM){
+        return NULL; //preguntar
+    }
     bs->matrix = malloc(bs->cant * sizeof(int *));
+
+    if(errno == ENOMEM){
+        return NULL; //preguntar
+    }
 
     TList aux = bs->first;
 
@@ -171,13 +178,11 @@ int getIndex(int id, idArray * vec, size_t dim)
 
     for(int i=0; i < dim; i++)
     {
-    
-    if(id == vec[i].id)
-        return i;
+       if(id == vec[i].id)
+         return i;
     }
 
 return -1;
-
 }
 
 void sort(size_t dim,  int * vec)
@@ -228,7 +233,7 @@ struct q1_struct * q1(bikeSharingADT bikeSharing){
     errno = 0;
     struct q1_struct * vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
     if(errno == ENOMEM){
-        perror("Error alocando memoria"); //preguntar
+        return NULL; //preguntar
     }
     for(int i = 0; i < bikeSharing->cant; i++){
         vec1[i].trips = bikeSharing->vec[i].member_trips;
