@@ -171,10 +171,31 @@ void sort(size_t dim,  int * vec)
     }
 }
 
-void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month)
+
+void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear) 
 {
+    int idxStart, idxEnd;
+
+    //Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
+    if ((idxStart = getIndex(startId, bikeSharing->vec, bikeSharing->cant)) == -1 || (idxEnd = getIndex(end_id, bikeSharing->vec, bikeSharing->cant)) == -1) {
+        return;
+    }
+
+    //Si es miembro agregamos el viaje al vector
+    if (isMember) {
+        bikeSharing->vec[idxStart].member_trips++;
+    }
+
+    //Agregamos viaje al vector por mes
+    bikeSharing->vec[idxStart].months[month]++;
+
+    //Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
+    if (startId != endId || (startId == endId && year >= sYear && year <= eYear)) {
+       bikeSharing->matrix[idxStart][idxEnd]++;
+    }
     
 }
+
 
 
 /*crea un vector que relaciona el id, el nombre, los viajes de los miembros, y un vector de 12 posiciones que contenga la cant de viajes x mes de las estaciones con una posicion de la matriz (chequear toArray)
