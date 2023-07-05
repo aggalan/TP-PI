@@ -8,17 +8,6 @@
 typedef struct bikeSharingCDT * bikeSharingADT;
 
 
-typedef struct idArray
-{
-
-    size_t id;
-    char * station_name;
-    size_t member_trips;
-    int months[12];
-
-}idArray;
-
-
 /*libera toda memoria reservada por el TAD*/
 void freeBikeSharing(bikeSharingADT bikeSharing);
 
@@ -46,16 +35,8 @@ int * q3();
 /*va a la matriz, agarra la diagonal, lo pasa a un vector, y llama a la funcion de orden para ordenar ese vector. (descendente) */
 int * q4();
 
-/*crea un vector que relaciona el id, el nombre, los viajes de los miembros, y un vector de 12 posiciones que contenga la cant de viajes x mes de las estaciones con una posicion de la matriz (chequear toArray)
- hacer la matriz al mismo tiempo 
- */
-
-idArray * makeIdArray(size_t size);
-
-void fillIdArray(idArray * vec, TList list);
-
-/*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
-int getIndex(int id, int * vec, size_t dim);
+/*asigna la memoria necesaria al vector y la matriz (bikeSharing->cant) con calloc, y haria un recorrido de la lista llenando los campos de id y de station_name*/
+void prepare_data_for_trips();
 
 /*ordena de manera descendientemente por cantidad de viajes*/
 void sort(size_t dim, int * vec);
