@@ -16,8 +16,8 @@ typedef struct q1_struct {
 typedef struct q2_struct {
     char * start_station;
     char * end_station;
-    size_t trips_start-end;
-    size_t trips_end-start;
+    size_t trips_start_end;
+    size_t trips_end_start;
 } q2_struct;
 
 typedef struct q3_struct {
