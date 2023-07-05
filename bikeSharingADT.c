@@ -75,6 +75,31 @@ bikeSharingADT newBikeSharing()
     return new;
 }
 
+void freeBikeSharing(bikeSharingADT bs)
+{
+	TList curr = bs->first, aux;
+
+	while (curr != NULL) {
+		aux = curr->tail;
+		free(curr);
+		curr = aux;
+	}
+
+    free(bs->vec);
+
+    /*
+
+    for(int i = 0; i < bs->cant; i++)
+    {
+        free(bs->matrix[i]);
+    }
+
+    */
+
+    free(bs->matrix);
+	free(bs);
+}
+
 static TList addStationRec(TList list, char *station_name, int id)
 {
     int c;
@@ -124,6 +149,8 @@ void prepare_data_for_trips(bikeSharingADT bs)
     for(i = 0; i < bs->cant; i++)
     {
         bs->matrix[i]= calloc(bs->cant, sizeof(int));
+
+        bs->vec[i].station_name = malloc(MAX_LETTERS);
 
         bs->vec[i].id = aux->id;
         strcpy(bs->vec[i].station_name, aux->station_name);
