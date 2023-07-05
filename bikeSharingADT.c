@@ -55,6 +55,8 @@ typedef struct bikeSharingCDT
 {
     TList first; // puntero a la primera estacion
     size_t cant; // cantidad de estaciones
+    idArray * vec;
+    int ** matrix;
 
 } bikeSharingCDT;
 
@@ -109,25 +111,32 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 }
 
 
-idArray * makeIdArray(size_t size)
+// validar los allocs
+
+void prepare_data_for_trips(bikeSharingADT bs)
 {
+    int i;
+    bs->vec = malloc(bs->cant * sizeof(idArray));
+    bs->matrix = malloc(bs->cant * sizeof(int *));
 
-}
+    TList aux = bs->first;
 
-void fillIdArray(idArray * vec, TList list)
-{
-    TList aux = list;
-    int i = 0;
-
-    while(aux != NULL)
+    for(i = 0; i < bs->cant; i++)
     {
-        strcpy(vec[i].station_name, aux->station_name);
-        vec[i].id = aux->id;
-        aux = aux->tail;
-        i++;
+        bs->matrix[i]= calloc(bs->cant, sizeof(int));
+
+        bs->vec[i].id = aux->id;
+        strcpy(bs->vec[i].station_name, aux->station_name);
+        bs->vec[i].member_trips = 0;
+
+        for(int j = 0; j < 12; j++)
+        bs->vec[i].months[j] = 0;
+
+        aux = aux -> tail;
     }
 
 }
+
 
 
 int getIndex(int id, int * vec, size_t dim)
@@ -171,10 +180,6 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 /*crea un vector que relaciona el id, el nombre, los viajes de los miembros, y un vector de 12 posiciones que contenga la cant de viajes x mes de las estaciones con una posicion de la matriz (chequear toArray)
  hacer la matriz al mismo tiempo 
  */
-
-idArray * makeIdArray(size_t size);
-
-void fillIdArray(idArray * vec, TList list);
 
 /*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
 int getIndex(int id, int * vec, size_t dim);
