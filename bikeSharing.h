@@ -50,7 +50,9 @@ int * q4();
  hacer la matriz al mismo tiempo 
  */
 
-void makeIdArray(idArray * vec, TList list, size_t size);
+void makeIdArray(size_t size);
+
+void fillIdArray(idArray * vec, TList list);
 
 /*recorre el vector y cuando matchea el id de la estacion devuelve la posicion en la matriz*/
 int getIndex(int id, int * vec, size_t dim);
