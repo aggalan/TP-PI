@@ -90,11 +90,12 @@ int main(int argc, char * argv[])
     int limit_start_year, limit_end_year; 
 
     if (argc < 3) {
-        limit_start_year = limit_end_year = -1;
+        limit_start_year = -1;
+        limit_end_year = 3000;
     }
     else if (argc == 3) {
         limit_start_year = argv[3];
-        limit_end_year = -1;
+        limit_end_year = 3000;
     }
     else if (argc == 4) {
         limit_start_year = argv[3];
