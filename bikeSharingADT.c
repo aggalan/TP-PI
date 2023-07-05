@@ -177,7 +177,7 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     int idxStart, idxEnd;
 
     //Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
-    if ((idxStart = getIndex(startId, bikeSharing->vec, bikeSharing->cant)) == -1 || (idxEnd = getIndex(end_id, bikeSharing->vec, bikeSharing->cant)) == -1) {
+    if ((idxStart = getIndex(startId, bikeSharing->vec, bikeSharing->cant)) == -1 || (idxEnd = getIndex(endId, bikeSharing->vec, bikeSharing->cant)) == -1) {
         return;
     }
 
