@@ -44,15 +44,6 @@ void setMatrix(bikeSharingADT bs);
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear);
 
 
-void toBegin(bikeSharingADT bikeSharing, char start);
-
-
-int hasNext(const bikeSharingADT bikeSharing, char start);
-
-
-TList next(bikeSharingADT bikeSharing, char start);
-
-
 //chequear que devuelven las funciones de query(tiene sentido que devuelva un nuevo vector para podedr imprimir lindo)
 
 /* 
@@ -69,7 +60,7 @@ q1_struct * q1(bikeSharingADT bikeSharing, int query);
     Va a la matriz y obtiene los valores ij y ji. ignora i = j. llama a getdata y va a los indices solicitados. 
     Retorna un struct del estilo q2_struct.
 */
-q2_struct * q2(); 
+q2_struct * q2(bikeSharingADT bikeSharing); 
  
  /* 
     Recorre el IdArray, va al vector de los viajes de los meses y saca la info ( ya esta ordenado alfabeticamente).
