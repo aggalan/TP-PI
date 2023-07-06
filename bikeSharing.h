@@ -44,6 +44,15 @@ void setMatrix(bikeSharingADT bs);
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear);
 
 
+void toBegin(bikeSharingADT bikeSharing, char start);
+
+
+int hasNext(const bikeSharingADT bikeSharing, char start);
+
+
+TList next(bikeSharingADT bikeSharing, char start);
+
+
 //chequear que devuelven las funciones de query(tiene sentido que devuelva un nuevo vector para podedr imprimir lindo)
 
 /* 
