@@ -277,6 +277,10 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query) // falta actualizar esto
 
         int len = strlen(aux->station_name);
         vec1[i].station_name = malloc(len + 1);
+        if (errno == ENOMEM)
+        {
+        return NULL;
+        }
         strcpy(vec1[i].station_name, aux->station_name);
         aux = aux->tail;
     }
@@ -289,8 +293,8 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query) // falta actualizar esto
 struct q2_struct *q2(bikeSharingADT bikeSharing)
 {
     errno = 0;
-    struct q2_struct *vec2 = malloc(bikeSharing->cant * sizeof(q2_struct));
-    if (errno = ENOMEM)
+    q2_struct *vec2 = malloc(bikeSharing->cant * sizeof(q2_struct));
+    if (errno == ENOMEM)
     {
         return NULL;
     }
@@ -301,7 +305,11 @@ struct q2_struct *q2(bikeSharingADT bikeSharing)
     {
         toBegin(bikeSharing, 0);
         eAux = next(bikeSharing, 1);
-        vec2[i].start_station = malloc(strlen(sAux->station_name));
+        vec2[i].start_station = malloc(strlen(sAux->station_name)+1);
+        if (errno == ENOMEM)
+        {
+        return NULL;
+        }
         strcpy(vec2[i].start_station, sAux->station_name);
         for (int j = 0; j < bikeSharing->cant; j++)
         {
@@ -312,7 +320,11 @@ struct q2_struct *q2(bikeSharingADT bikeSharing)
             }
             vec2[i].trips_start_end = bikeSharing->matrix[i][j];
             vec2[i].trips_end_start = bikeSharing->matrix[j][i];
-            vec2[i].end_station = malloc(strlen(eAux->station_name));
+            vec2[i].end_station = malloc(strlen(eAux->station_name)+1);
+            if (errno == ENOMEM)
+            {
+            return NULL;
+            }
             strcpy(vec2[i].end_station, eAux->station_name);
         }
     }
@@ -323,7 +335,7 @@ q3_struct *q3(bikeSharingADT bikeSharing)
 {
     TList aux = bikeSharing->first;
     errno = 0;
-    struct q3_struct *vec3 = malloc(bikeSharing->cant * sizeof(struct q3_struct));
+    q3_struct *vec3 = malloc(bikeSharing->cant * sizeof(q3_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
@@ -331,6 +343,7 @@ q3_struct *q3(bikeSharingADT bikeSharing)
 
     for (int i = 0; i < bikeSharing->cant; i++)
     {
+        vec3[i].station_name = malloc(strlen(aux->station_name)+1); 
         strcpy(vec3[i].station_name, aux->station_name);
         for (int j = 0; j < MONTHS; j++)
         {
