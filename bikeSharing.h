@@ -56,7 +56,7 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     size_t trips;
    }
 */
-struct q1_struct * q1(); 
+struct q1_struct * q1(bikeSharingADT bikeSharing); 
 
 /* 
     Va a la matriz y obtiene los valores ij y ji. ignora i = j. llama a getdata y va a los indices solicitados. 
@@ -81,7 +81,7 @@ q1_struct * q4();
 void prepare_data_for_trips(bikeSharingADT bs);
 
 /*ordena de manera descendientemente por cantidad de viajes*/
-void sort(size_t dim, int * vec);
+void sort(size_t dim, struct q1_struct * vec);
 
 
 

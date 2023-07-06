@@ -177,17 +177,17 @@ TList getIndex(int id, TList first, int *index) // devuelve el nodo de la estaci
 
 // nose si va a hacer falta sort
 
-void sort(size_t dim, int *vec)
+void sort(size_t dim, struct q1_struct *vec)
 {
 
     for (int i = 0; i < dim - 1; i++)
     {
         for (int j = 0; j < dim - i - 1; j++)
         {
-            if (vec[j] < vec[j + 1])
+            if (vec[j].trips < vec[j + 1].trips)
             {
                 // Intercambiar los elementos
-                int aux = vec[j];
+                struct q1_struct aux = vec[j];
                 vec[j] = vec[j + 1];
                 vec[j + 1] = aux;
             }
@@ -222,24 +222,27 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     }
 }
 
-/*   CORREGIR PARA ESTOS CAMBIOS
 
 struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
 {
+    TList aux = bikeSharing->first;
     errno = 0;
     struct q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
     }
-    for (int i = 0; i < bikeSharing->cant; i++)
+    for (int i = 0; i < bikeSharing->cant; i++) //copio todos los station name y los member trips al vector
     {
-        vec1[i].trips = bikeSharing->vec[i].member_trips;
-        strcpy(vec1[i].station_name, bikeSharing->vec[i].station_name);
+        vec1[i].trips = aux->member_trips;
+        strcpy(vec1[i].station_name, aux->station_name);
+        aux=aux->tail;
     }
+
+    sort(bikeSharing->cant, vec1); //ordeno por cantidad de viajes (de mayor a menor)
 
     return vec1;
 }
 
-*/
+
 
