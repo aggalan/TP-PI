@@ -253,7 +253,7 @@ static TList next(bikeSharingADT bikeSharing, char start)
     return aux;
 }
 
-typedef int (*compare)(q1_struct, q1_struct);
+typedef int (*compare)(const void * , const void *);
 
 static int q1_cmp(const void *e1, const void *e2)
 {
