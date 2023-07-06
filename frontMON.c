@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include "bikeSharing.h"
+#include "htmlTable.h"  
 #define MAX_WORD_LENGTH 30
 #define MAX_LINE_LENGTH 100
 
@@ -142,4 +143,57 @@ int main(int argc, char * argv[])
             addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
         }
     }
+
+    q1_struct * vec1 = q1( bikeSharing, 1);
+
+
+    q2_struct * vec2 = q2( bikeSharing );
+
+
+    q3_struct * vec3 = q3( bikeSharing );
+
+
+    q1_struct * vec4 = q1( bikeSharing, 4);
+
+
+
+    // QUERY 1
+
+    htmlTable table1 = newTable( "query1.html",2,"Station", "StartedTrips" );
+
+    for ( int i = 0; vec1[i].trips == NULL; i++ ) {
+        addHTMLRow( table1, vec1[i].station_name, vec1[i].trips );    
+    }
+    closeHTMLTable(table1);
+
+
+    // QUERY 2
+
+    htmlTable table2 = newTable( "query2.html",4,"Station A","Station B","Trips A -> B","Trips B -> A" );
+
+    for ( int i = 0; vec2[i].trips_end_start == NULL; i++ ) {
+        addHTMLRow( table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start );    
+    }
+    closeHTMLTable(table2);
+
+    // QUERY 3
+
+    htmlTable table3 = newTable( "query3.html",13,"J","F","M","A","M","J","J","A","S","O","N","D","Station" );
+
+    for ( int i = 0; vec3[i].months == NULL; i++ ) {
+        addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
+    }
+    closeHTMLTable(table3);
+
+    // QUERY 4
+
+    htmlTable table4 = newTable( "query4.html",2,"Station", "RoundingTrips" );
+
+    for ( int i = 0; vec4[i].trips == NULL; i++ ) {
+        addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
+    }
+    closeHTMLTable(table4);
+
+    //CRERCION MAGICA DE CSV
+
 }
