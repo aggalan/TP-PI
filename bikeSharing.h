@@ -8,8 +8,6 @@
 
 typedef struct bikeSharingCDT * bikeSharingADT;
 
-typedef struct node * TList;
-
 typedef struct q1_struct {
     char * station_name;
     size_t trips;
@@ -33,14 +31,14 @@ void freeBikeSharing(bikeSharingADT bikeSharing);
 /*Retorna un nuevo bikesharing. Al principio esta vacio*/
 bikeSharingADT newBikeSharing();
 
-void setMatrix(bikeSharingADT bs);
-
-TList getIndex(int id, TList first, int *index);
-
-static TList addStationRec(TList list, char *station_name, int id);
-
 /*Almacena una nueva estacion en orden alfabetico el TAD*/
 void addStation(bikeSharingADT bikeSharing, char * station, int id);
+
+/*
+Reserva espacio para la matriz y pone los indices.
+Se debe llamar antes de empezar a cargar los viajes.
+*/
+void setMatrix(bikeSharingADT bs);
 
 /*Almacena un nuevo viaje. Addtrip deberia cargar el viaje de destino y origen a la matriz*/ 
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear);
@@ -75,10 +73,6 @@ q3_struct * q3();
     Retorna un vector de struct del estilo q1_struct.    
 */
 q1_struct * q4();
-
-/*reserva espacio para la matriz y pone los indices*/
-
-void setMatrix(bikeSharingADT bs);
 
 
 
