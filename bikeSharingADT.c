@@ -289,8 +289,7 @@ struct q2_struct * q2( bikesharingADT bikeSharing ) {
     if (errno = ENOMEM) {
         return NULL;
     }
-    TList sAux = malloc( sizeof(TNode) );
-    TList eAux = malloc( sizeof(TNode) );
+    TList sAux, eAux;
     sAux = bikeSharing->sIter;
     eAux = bikeSharing->eIter;
     for ( int i = 0; i<bikeSharing->cant; i++ ) {
