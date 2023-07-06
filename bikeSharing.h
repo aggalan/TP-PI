@@ -63,7 +63,7 @@ TList next(bikeSharingADT bikeSharing, char start);
     size_t trips;
    }
 */
-q1_struct * q1(bikeSharingADT bikeSharing); 
+q1_struct * q1(bikeSharingADT bikeSharing, int query); 
 
 /* 
     Va a la matriz y obtiene los valores ij y ji. ignora i = j. llama a getdata y va a los indices solicitados. 
@@ -75,13 +75,7 @@ q2_struct * q2();
     Recorre el IdArray, va al vector de los viajes de los meses y saca la info ( ya esta ordenado alfabeticamente).
     Retorna un vector de structs del estilo q3_struct;
  */
-q3_struct * q3();
-
-/*
-    Va a la matriz, agarra la diagonal, lo pasa a un vector, y llama a la funcion de orden para ordenar ese vector. (descendente) 
-    Retorna un vector de struct del estilo q1_struct.    
-*/
-q1_struct * q4();
+q3_struct * q3(bikeSharingADT bikeSharing);
 
 
 
