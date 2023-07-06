@@ -283,6 +283,36 @@ q1_struct * q1(bikeSharingADT bikeSharing, int query)  //falta actualizar esto
     return vec1;
 }
 
+struct q2_struct * q2( bikesharingADT bikeSharing ) {
+    errno = 0;
+    struct q2_struct * vec2 = malloc( bikeSharing->cant * sizeof( q2_struct ) );
+    if (errno = ENOMEM) {
+        return NULL;
+    }
+    TList sAux = malloc( sizeof(TNode) );
+    TList eAux = malloc( sizeof(TNode) );
+    sAux = bikeSharing->sIter;
+    eAux = bikeSharing->eIter;
+    for ( int i = 0; i<bikeSharing->cant; i++ ) {
+        toBegin( bikeSharing, 1 );
+        eAux = next( bikeSharing, 0 );
+        vec2[i].start_station = malloc( strlen(bikeSharing->eIter->station_name) );
+        strcpy(vec2[i].start_station, bikeSharing->eIter->station_name);
+        for ( int j = 0; j<bikeSharing->cant; j++ ) {
+            sAux = next( bikeSharing, 1 );
+            if ( i == j ) {
+                continue;
+            }
+            vec2[i].trips_start_end = bikeSharing->matrix[i][j];
+            vec2[i].trips_end_start = bikeSharing->matrix[j][i];
+            vec2[i].end_station = malloc( strlen(sAux->station_name) );
+            strcpy(vec2[i].end_station, eAux->station_name);
+        }
+    }
+    return vec2;
+}
+
+
 
 q3_struct * q3 (bikeSharingADT bikeSharing) {
     TList aux = bikeSharing->first;
