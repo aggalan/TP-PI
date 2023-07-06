@@ -202,6 +202,12 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     // Agregamos viaje a la estacion por mes
     sAux->months[month]++;
 
+    // Agregamos los viajes circulares
+    if (startId == endId)
+    {
+        sAux->circular_trips++;
+    }
+
     // Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
     if (startId != endId || (startId == endId && year >= sYear && year <= eYear))
     {
@@ -254,7 +260,7 @@ static int q1_cmp(q1_struct e1, q1_struct e2)
     return e1.trips - e2.trips;
 }
 
-q1_struct *q1(bikeSharingADT bikeSharing, int query) // falta actualizar esto
+q1_struct *q1(bikeSharingADT bikeSharing, int query)
 {
     TList aux = bikeSharing->first;
     errno = 0;
