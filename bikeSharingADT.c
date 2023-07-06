@@ -283,7 +283,7 @@ q1_struct * q1(bikeSharingADT bikeSharing, int query)  //falta actualizar esto
     return vec1;
 }
 
-struct q2_struct * q2( bikesharingADT bikeSharing ) {
+struct q2_struct * q2( bikeSharingADT bikeSharing ) {
     errno = 0;
     struct q2_struct * vec2 = malloc( bikeSharing->cant * sizeof( q2_struct ) );
     if (errno = ENOMEM) {
