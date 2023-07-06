@@ -81,7 +81,7 @@ int main(int argc, char * argv[])
     // When finished loading the stations, we load the trips (reutilizing str)
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
 
-    char * date_delim = '-';
+    char * date_delim = "-";
     char * date_token;
     int start_year, start_month;
     size_t start_id, end_id;
@@ -89,15 +89,15 @@ int main(int argc, char * argv[])
 
     int limit_start_year, limit_end_year; 
 
-    if (argc < 3) {
+    if (argc < 4) {
         limit_start_year = -1;
         limit_end_year = 3000;
     }
-    else if (argc == 3) {
+    else if (argc == 4) {
         limit_start_year = argv[3];
         limit_end_year = 3000;
     }
-    else if (argc == 4) {
+    else if (argc == 5) {
         limit_start_year = argv[3];
         limit_end_year = argv[4];
     }
