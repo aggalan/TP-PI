@@ -299,21 +299,21 @@ struct q2_struct *q2(bikeSharingADT bikeSharing)
     eAux = bikeSharing->eIter;
     for (int i = 0; i < bikeSharing->cant; i++)
     {
-        toBegin(bikeSharing, 1);
-        eAux = next(bikeSharing, 0);
-        vec2[i].start_station = malloc(strlen(eAux->station_name));
-        strcpy(vec2[i].start_station, eAux->station_name);
+        toBegin(bikeSharing, 0);
+        eAux = next(bikeSharing, 1);
+        vec2[i].start_station = malloc(strlen(sAux->station_name));
+        strcpy(vec2[i].start_station, sAux->station_name);
         for (int j = 0; j < bikeSharing->cant; j++)
         {
-            sAux = next(bikeSharing, 1);
+            eAux = next(bikeSharing, 0);
             if (i == j)
             {
                 continue;
             }
             vec2[i].trips_start_end = bikeSharing->matrix[i][j];
             vec2[i].trips_end_start = bikeSharing->matrix[j][i];
-            vec2[i].end_station = malloc(strlen(sAux->station_name));
-            strcpy(vec2[i].end_station, sAux->station_name);
+            vec2[i].end_station = malloc(strlen(eAux->station_name));
+            strcpy(vec2[i].end_station, eAux->station_name);
         }
     }
     return vec2;
