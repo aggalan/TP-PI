@@ -6,27 +6,15 @@
 #include <errno.h>
 #include "bikeSharing.h"
 
-#define MAX_LETTERS 60
 #define MONTHS 12 // fijarse
 
-static enum months { JAN = 0,
-                     FEB,
-                     MAR,
-                     APR,
-                     JUN,
-                     JUL,
-                     AUG,
-                     SEP,
-                     OCT,
-                     NOV,
-                     DEC };
 
 typedef struct node
 {
     size_t id;
     int index;
     int months[MONTHS];
-    char station_name[MAX_LETTERS];
+    char * station_name;
     size_t member_trips;
     size_t circular_trips;
     struct node *tail;
@@ -167,7 +155,7 @@ static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_i
     TList aux = first;
     TList ans = NULL;
 
-    while (aux != NULL && flag < 2)
+    while (aux != NULL && *flag < 2)
     {
         if (aux->id == start_id) {
             *start_index = aux->index;
@@ -180,7 +168,6 @@ static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_i
             (*flag)++;
         }
 
-        return aux; // si matchea el id devuelvo la direccion del nodo y el index en la matriz
 
         aux = aux->tail;
     }
@@ -193,7 +180,7 @@ static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_i
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear)
 {
     int idxStart, idxEnd, flag = 0;
-    TList sAux, eAux;
+    TList sAux;
 
     // Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
     sAux = getIndex(bikeSharing->first, startId, endId, &idxStart, &idxEnd, &flag);
@@ -212,13 +199,13 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     sAux->months[month]++;
 
     // Agregamos los viajes circulares
-    if (startId == endId)
+    if (startId == endId && (year >= sYear && year <= eYear))
     {
         sAux->circular_trips++;
     }
 
     // Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
-    if (startId != endId || (startId == endId && year >= sYear && year <= eYear))
+    else
     {
         bikeSharing->matrix[idxStart][idxEnd]++;
     }
@@ -264,6 +251,8 @@ static TList next(bikeSharingADT bikeSharing, char start)
     return aux;
 }
 
+typedef int (*cmp_func_ptr)(q1_struct, q1_struct);
+
 static int q1_cmp(q1_struct e1, q1_struct e2)
 {
     return e1.trips - e2.trips;
@@ -300,7 +289,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
         aux = aux->tail;
     }
 
-    qsort(vec1, bikeSharing->cant, sizeof(q1_struct), q1_cmp);
+    qsort(vec1, bikeSharing->cant, sizeof(q1_struct), (cmp_func_ptr)q1_cmp);
 
     return vec1;
 }
