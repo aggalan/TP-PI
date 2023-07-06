@@ -344,6 +344,10 @@ q3_struct *q3(bikeSharingADT bikeSharing)
     for (int i = 0; i < bikeSharing->cant; i++)
     {
         vec3[i].station_name = malloc(strlen(aux->station_name)+1); 
+        if (errno == ENOMEM)
+        {
+        return NULL; // preguntar
+        }
         strcpy(vec3[i].station_name, aux->station_name);
         for (int j = 0; j < MONTHS; j++)
         {
