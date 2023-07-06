@@ -42,6 +42,7 @@ typedef struct bikeSharingCDT
     TList eIter;
     size_t cant; // cantidad de estaciones
     int **matrix;
+    char matrix_exists;
 
 } bikeSharingCDT;
 
@@ -70,14 +71,12 @@ void freeBikeSharing(bikeSharingADT bs)
         curr = aux;
     }
 
-    /*
-
-    for(int i = 0; i < bs->cant; i++)
-    {
-        free(bs->matrix[i]);
+    if (bs->matrix_exists) {
+        for(int i = 0; i < bs->cant; i++)
+        {
+            free(bs->matrix[i]);
+        }
     }
-
-    */
 
     free(bs->matrix);
     free(bs);
@@ -132,8 +131,8 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 
 void setMatrix(bikeSharingADT bs)
 {
+    bs->matrix_exists = 1; //Avisamos al free que debe liberar la matriz tambien
     // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
-
     int i;
     errno = 0;
 
