@@ -161,35 +161,45 @@ void setMatrix(bikeSharingADT bs)
     }
 }
 
-TList getIndex(int id, TList first, int *index) // devuelve el nodo de la estacion solicitada y el index en un parametro de salida
+/* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!*/
+TList getIndex(TList first, size_t start_id, size_t end_id, int * start_index, int * end_index, int *flag) 
 {
 
     TList aux = first;
+    TList ans = NULL;
 
-    while (aux != NULL)
+    while (aux != NULL && flag < 2)
     {
-        if (id == aux->id)
+        if (aux->id == start_id) {
+            *start_index = aux->index;
+            ans = aux;
+            (*flag)++;
+        }
 
-            *index = aux->index;
+        if (aux->id == end_id) {
+            *end_index = aux->index;
+            (*flag)++;
+        }
 
         return aux; // si matchea el id devuelvo la direccion del nodo y el index en la matriz
 
         aux = aux->tail;
     }
 
-    return NULL;
+    return ans;
 }
 
 // nose si va a hacer falta sort
 
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear)
 {
-    int idxStart, idxEnd;
+    int idxStart, idxEnd, flag = 0;
     TList sAux, eAux;
 
     // Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
-    if ((sAux = getIndex(startId, bikeSharing->first, &idxStart)) == NULL || (eAux = getIndex(endId, bikeSharing->first, &eAux)) == NULL)
-    {
+    sAux = getIndex(bikeSharing->first, startId, endId, &idxStart, &idxEnd, &flag);
+
+    if (flag < 2) {
         return;
     }
 
