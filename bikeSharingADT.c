@@ -274,4 +274,21 @@ struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
 }
 
 
+q3_struct * q3 (bikeSharingADT bikeSharing) {
+    TList aux = bikeSharing->first;
+    errno = 0;
+    struct q3_struct * vec3 = malloc(bikeSharing->cant * sizeof(struct q3_struct));
+    if (errno == ENOMEM)
+    {
+        return NULL; // preguntar
+    }
 
+    for (int i=0; i<bikeSharing->cant; i++) {
+        strcpy(vec3[i].station_name, aux->station_name); 
+        for (int j=0; j<MONTHS; j++) {
+            vec3[i].months[j] = aux->months[j];
+        }
+    }
+
+    return vec3;
+}
