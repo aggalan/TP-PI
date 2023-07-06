@@ -37,6 +37,8 @@ typedef TNode * TList;
 typedef struct bikeSharingCDT
 {
     TList first; // puntero a la primera estacion
+    TList sIter;
+    TList eIter;
     size_t cant; // cantidad de estaciones
     int ** matrix;
 
@@ -202,6 +204,44 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     {
         bikeSharing->matrix[idxStart][idxEnd]++;
     }
+}
+
+
+// para los iteradores poner 1 si es de salida o 0 sino asi modifica ese iterador
+
+void toBegin(bikeSharingADT bikeSharing, char start) {
+
+    if(start)
+    bikeSharing->sIter = bikeSharing->first;
+
+    bikeSharing->eIter = bikeSharing->first;
+}
+
+
+int hasNext(const bikeSharingADT bikeSharing, char start) {
+
+    if(start)
+    return bikeSharing->sIter != NULL;
+
+    return bikeSharing->eIter != NULL;
+}
+
+TList next(bikeSharingADT bikeSharing, char start) {
+    
+    if ( !hasNext(bikeSharing, start)) {
+        return NULL;
+    }
+
+    if(start)
+    {
+    TList aux = bikeSharing->sIter;
+    bikeSharing->sIter = bikeSharing->sIter->tail;
+    return aux;
+    }
+
+    TList aux = bikeSharing->eIter;
+    bikeSharing->eIter = bikeSharing->eIter->tail;
+    return aux;
 }
 
 
