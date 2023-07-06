@@ -85,6 +85,8 @@ static TList addStationRec(TList list, char *station_name, int id)
 
         new->id = id;
 
+        new->station_name = malloc(strlen(station_name)+1);
+
         strcpy(new->station_name, station_name); // chequear si se puede hacer esto
 
         new->member_trips = 0; // inicializo los viajes de miembros en 0
@@ -128,7 +130,7 @@ void setMatrix(bikeSharingADT bs)
 
     if (errno == ENOMEM)
     {
-        return NULL;
+        return;
     }
 
     TList aux = bs->first;
@@ -139,7 +141,7 @@ void setMatrix(bikeSharingADT bs)
 
         if (errno == ENOMEM)
         {
-            return NULL;
+            return;
         }
 
         aux->index = i;
@@ -253,9 +255,9 @@ static TList next(bikeSharingADT bikeSharing, char start)
 
 typedef int (*cmp_func_ptr)(q1_struct, q1_struct);
 
-static int q1_cmp(q1_struct e1, q1_struct e2)
+static int q1_cmp(q1_struct * e1, q1_struct * e2)
 {
-    return e1.trips - e2.trips;
+    return e1->trips - e2->trips;
 }
 
 q1_struct *q1(bikeSharingADT bikeSharing, int query)
