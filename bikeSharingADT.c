@@ -28,6 +28,7 @@ typedef struct node
     int months[MONTHS];
     char station_name[MAX_LETTERS];
     size_t member_trips;
+    size_t circular_trips;
     struct node *tail;
 
 } TNode;
@@ -249,26 +250,33 @@ static int q1_cmp (q1_struct e1, q1_struct e2) {
     return e1.trips - e2.trips;
 }
 
-struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
+q1_struct * q1(bikeSharingADT bikeSharing, int query)  //falta actualizar esto
 {
     TList aux = bikeSharing->first;
     errno = 0;
-    struct q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
+    struct q1_struct * vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
     }
     for (int i = 0; i < bikeSharing->cant; i++) //copio todos los station name y los member trips al vector
     {
-        vec1[i].trips = aux->member_trips;
+        switch(query) {
+            case 1: 
+                vec1[i].trips = aux->member_trips;
+                break;
+            case 4:
+                vec1[i].trips = aux->circular_trips;
+                break;
+        }
+        
+        int len = strlen(aux->station_name);
+        vec1[i].station_name = malloc(len+1);
         strcpy(vec1[i].station_name, aux->station_name);
         aux=aux->tail;
     }
 
     qsort(vec1, bikeSharing->cant, sizeof(q1_struct), q1_cmp);
-
-    // sort(bikeSharing->cant, vec1); //ordeno por cantidad de viajes (de mayor a menor)
-    // We use qsort, which is better for our purpouses
 
     return vec1;
 }
