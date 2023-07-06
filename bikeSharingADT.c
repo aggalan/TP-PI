@@ -33,7 +33,7 @@ typedef struct node
 
 } TNode;
 
-typedef TNode * TList;
+typedef TNode *TList;
 
 typedef struct bikeSharingCDT
 {
@@ -41,7 +41,7 @@ typedef struct bikeSharingCDT
     TList sIter;
     TList eIter;
     size_t cant; // cantidad de estaciones
-    int ** matrix;
+    int **matrix;
 
 } bikeSharingCDT;
 
@@ -209,37 +209,39 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     }
 }
 
-
 // para los iteradores poner 1 si es de salida o 0 sino asi modifica ese iterador
 
-void toBegin(bikeSharingADT bikeSharing, char start) {
+void toBegin(bikeSharingADT bikeSharing, char start)
+{
 
-    if(start)
-    bikeSharing->sIter = bikeSharing->first;
+    if (start)
+        bikeSharing->sIter = bikeSharing->first;
 
     bikeSharing->eIter = bikeSharing->first;
 }
 
+int hasNext(const bikeSharingADT bikeSharing, char start)
+{
 
-int hasNext(const bikeSharingADT bikeSharing, char start) {
-
-    if(start)
-    return bikeSharing->sIter != NULL;
+    if (start)
+        return bikeSharing->sIter != NULL;
 
     return bikeSharing->eIter != NULL;
 }
 
-TList next(bikeSharingADT bikeSharing, char start) {
-    
-    if ( !hasNext(bikeSharing, start)) {
+TList next(bikeSharingADT bikeSharing, char start)
+{
+
+    if (!hasNext(bikeSharing, start))
+    {
         return NULL;
     }
 
-    if(start)
+    if (start)
     {
-    TList aux = bikeSharing->sIter;
-    bikeSharing->sIter = bikeSharing->sIter->tail;
-    return aux;
+        TList aux = bikeSharing->sIter;
+        bikeSharing->sIter = bikeSharing->sIter->tail;
+        return aux;
     }
 
     TList aux = bikeSharing->eIter;
@@ -247,35 +249,36 @@ TList next(bikeSharingADT bikeSharing, char start) {
     return aux;
 }
 
-
-static int q1_cmp (q1_struct e1, q1_struct e2) {
+static int q1_cmp(q1_struct e1, q1_struct e2)
+{
     return e1.trips - e2.trips;
 }
 
-q1_struct * q1(bikeSharingADT bikeSharing, int query)  //falta actualizar esto
+q1_struct *q1(bikeSharingADT bikeSharing, int query) // falta actualizar esto
 {
     TList aux = bikeSharing->first;
     errno = 0;
-    struct q1_struct * vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
+    struct q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
     }
-    for (int i = 0; i < bikeSharing->cant; i++) //copio todos los station name y los member trips al vector
+    for (int i = 0; i < bikeSharing->cant; i++) // copio todos los station name y los member trips al vector
     {
-        switch(query) {
-            case 1: 
-                vec1[i].trips = aux->member_trips;
-                break;
-            case 4:
-                vec1[i].trips = aux->circular_trips;
-                break;
+        switch (query)
+        {
+        case 1:
+            vec1[i].trips = aux->member_trips;
+            break;
+        case 4:
+            vec1[i].trips = aux->circular_trips;
+            break;
         }
-        
+
         int len = strlen(aux->station_name);
-        vec1[i].station_name = malloc(len+1);
+        vec1[i].station_name = malloc(len + 1);
         strcpy(vec1[i].station_name, aux->station_name);
-        aux=aux->tail;
+        aux = aux->tail;
     }
 
     qsort(vec1, bikeSharing->cant, sizeof(q1_struct), q1_cmp);
@@ -283,48 +286,54 @@ q1_struct * q1(bikeSharingADT bikeSharing, int query)  //falta actualizar esto
     return vec1;
 }
 
-struct q2_struct * q2( bikeSharingADT bikeSharing ) {
+struct q2_struct *q2(bikeSharingADT bikeSharing)
+{
     errno = 0;
-    struct q2_struct * vec2 = malloc( bikeSharing->cant * sizeof( q2_struct ) );
-    if (errno = ENOMEM) {
+    struct q2_struct *vec2 = malloc(bikeSharing->cant * sizeof(q2_struct));
+    if (errno = ENOMEM)
+    {
         return NULL;
     }
     TList sAux, eAux;
     sAux = bikeSharing->sIter;
     eAux = bikeSharing->eIter;
-    for ( int i = 0; i<bikeSharing->cant; i++ ) {
-        toBegin( bikeSharing, 1 );
-        eAux = next( bikeSharing, 0 );
-        vec2[i].start_station = malloc( strlen(bikeSharing->eIter->station_name) );
+    for (int i = 0; i < bikeSharing->cant; i++)
+    {
+        toBegin(bikeSharing, 1);
+        eAux = next(bikeSharing, 0);
+        vec2[i].start_station = malloc(strlen(bikeSharing->eIter->station_name));
         strcpy(vec2[i].start_station, bikeSharing->eIter->station_name);
-        for ( int j = 0; j<bikeSharing->cant; j++ ) {
-            sAux = next( bikeSharing, 1 );
-            if ( i == j ) {
+        for (int j = 0; j < bikeSharing->cant; j++)
+        {
+            sAux = next(bikeSharing, 1);
+            if (i == j)
+            {
                 continue;
             }
             vec2[i].trips_start_end = bikeSharing->matrix[i][j];
             vec2[i].trips_end_start = bikeSharing->matrix[j][i];
-            vec2[i].end_station = malloc( strlen(sAux->station_name) );
+            vec2[i].end_station = malloc(strlen(sAux->station_name));
             strcpy(vec2[i].end_station, eAux->station_name);
         }
     }
     return vec2;
 }
 
-
-
-q3_struct * q3 (bikeSharingADT bikeSharing) {
+q3_struct *q3(bikeSharingADT bikeSharing)
+{
     TList aux = bikeSharing->first;
     errno = 0;
-    struct q3_struct * vec3 = malloc(bikeSharing->cant * sizeof(struct q3_struct));
+    struct q3_struct *vec3 = malloc(bikeSharing->cant * sizeof(struct q3_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
     }
 
-    for (int i=0; i<bikeSharing->cant; i++) {
-        strcpy(vec3[i].station_name, aux->station_name); 
-        for (int j=0; j<MONTHS; j++) {
+    for (int i = 0; i < bikeSharing->cant; i++)
+    {
+        strcpy(vec3[i].station_name, aux->station_name);
+        for (int j = 0; j < MONTHS; j++)
+        {
             vec3[i].months[j] = aux->months[j];
         }
     }
