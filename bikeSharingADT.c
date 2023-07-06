@@ -177,24 +177,6 @@ TList getIndex(int id, TList first, int *index) // devuelve el nodo de la estaci
 
 // nose si va a hacer falta sort
 
-void sort(size_t dim, struct q1_struct *vec)
-{
-
-    for (int i = 0; i < dim - 1; i++)
-    {
-        for (int j = 0; j < dim - i - 1; j++)
-        {
-            if (vec[j].trips < vec[j + 1].trips)
-            {
-                // Intercambiar los elementos
-                struct q1_struct aux = vec[j];
-                vec[j] = vec[j + 1];
-                vec[j + 1] = aux;
-            }
-        }
-    }
-}
-
 void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear)
 {
     int idxStart, idxEnd;
@@ -223,7 +205,7 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 }
 
 
-int q1_cmp (q1_struct e1, q1_struct e2) {
+static int q1_cmp (q1_struct e1, q1_struct e2) {
     return e1.trips - e2.trips;
 }
 

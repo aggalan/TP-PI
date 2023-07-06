@@ -76,12 +76,11 @@ q3_struct * q3();
 */
 q1_struct * q4();
 
-/*asigna la memoria necesaria al vector y la matriz (bikeSharing->cant) con calloc, y haria un recorrido de la lista llenando los campos de id y de station_name*/
+/*reserva espacio para la matriz y pone los indices*/
 
-void prepare_data_for_trips(bikeSharingADT bs);
+void setMatrix(bikeSharingADT bs);
 
-/*ordena de manera descendientemente por cantidad de viajes*/
-void sort(size_t dim, struct q1_struct * vec);
+
 
 
 
