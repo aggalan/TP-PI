@@ -255,7 +255,7 @@ static TList next(bikeSharingADT bikeSharing, char start)
 
 typedef int (*compare)(const void * , const void *);
 
-static int q1_cmp(const void *e1, const void *e2)
+static int q1_cmp(const q1_struct *e1, const q1_struct *e2)
 {
     const q1_struct *ptr1 = (const q1_struct *)e1;
     const q1_struct *ptr2 = (const q1_struct *)e2;
