@@ -162,7 +162,7 @@ void setMatrix(bikeSharingADT bs)
 }
 
 /* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!*/
-TList getIndex(TList first, size_t start_id, size_t end_id, int * start_index, int * end_index, int *flag) 
+static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_index, int * end_index, int *flag) 
 {
 
     TList aux = first;
@@ -227,7 +227,7 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 
 // para los iteradores poner 1 si es de salida o 0 sino asi modifica ese iterador
 
-void toBegin(bikeSharingADT bikeSharing, char start)
+static void toBegin(bikeSharingADT bikeSharing, char start)
 {
 
     if (start)
@@ -236,7 +236,7 @@ void toBegin(bikeSharingADT bikeSharing, char start)
     bikeSharing->eIter = bikeSharing->first;
 }
 
-int hasNext(const bikeSharingADT bikeSharing, char start)
+static int hasNext(const bikeSharingADT bikeSharing, char start)
 {
 
     if (start)
@@ -245,7 +245,7 @@ int hasNext(const bikeSharingADT bikeSharing, char start)
     return bikeSharing->eIter != NULL;
 }
 
-TList next(bikeSharingADT bikeSharing, char start)
+static TList next(bikeSharingADT bikeSharing, char start)
 {
 
     if (!hasNext(bikeSharing, start))
@@ -274,7 +274,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
 {
     TList aux = bikeSharing->first;
     errno = 0;
-    struct q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(struct q1_struct));
+    q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(q1_struct));
     if (errno == ENOMEM)
     {
         return NULL; // preguntar
@@ -306,7 +306,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
     return vec1;
 }
 
-struct q2_struct *q2(bikeSharingADT bikeSharing)
+q2_struct *q2(bikeSharingADT bikeSharing)
 {
     errno = 0;
     q2_struct *vec2 = malloc(bikeSharing->cant * sizeof(q2_struct));
