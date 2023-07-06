@@ -223,6 +223,10 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
 }
 
 
+int q1_cmp (q1_struct e1, q1_struct e2) {
+    return e1.trips - e2.trips;
+}
+
 struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
 {
     TList aux = bikeSharing->first;
@@ -239,7 +243,10 @@ struct q1_struct *q1(bikeSharingADT bikeSharing)  //falta actualizar esto
         aux=aux->tail;
     }
 
-    sort(bikeSharing->cant, vec1); //ordeno por cantidad de viajes (de mayor a menor)
+    qsort(vec1, bikeSharing->cant, sizeof(q1_struct), q1_cmp);
+
+    // sort(bikeSharing->cant, vec1); //ordeno por cantidad de viajes (de mayor a menor)
+    // We use qsort, which is better for our purpouses
 
     return vec1;
 }
