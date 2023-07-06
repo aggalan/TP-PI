@@ -308,24 +308,26 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
 q2_struct *q2(bikeSharingADT bikeSharing)
 {
     errno = 0;
-    q2_struct *vec2 = malloc(bikeSharing->cant * sizeof(q2_struct));
+
+
+    q2_struct * vec2 = malloc(((bikeSharing->cant * bikeSharing->cant) - (bikeSharing->cant)) * sizeof(q2_struct));
     if (errno == ENOMEM)
     {
         return NULL;
     }
+
+    int k = 0;
+
     TList sAux, eAux;
-    sAux = bikeSharing->sIter;
-    eAux = bikeSharing->eIter;
+     toBegin(bikeSharing, 1);
+
     for (int i = 0; i < bikeSharing->cant; i++)
     {
         toBegin(bikeSharing, 0);
-        eAux = next(bikeSharing, 1);
-        vec2[i].start_station = malloc(strlen(sAux->station_name)+1);
-        if (errno == ENOMEM)
-        {
-        return NULL;
-        }
-        strcpy(vec2[i].start_station, sAux->station_name);
+        sAux = next(bikeSharing, 1);
+
+        
+    
         for (int j = 0; j < bikeSharing->cant; j++)
         {
             eAux = next(bikeSharing, 0);
@@ -333,15 +335,31 @@ q2_struct *q2(bikeSharingADT bikeSharing)
             {
                 continue;
             }
-            vec2[i].trips_start_end = bikeSharing->matrix[i][j];
-            vec2[i].trips_end_start = bikeSharing->matrix[j][i];
-            vec2[i].end_station = malloc(strlen(eAux->station_name)+1);
+
+            vec2[k].start_station = malloc(strlen(sAux->station_name)+1);
+
+            if (errno == ENOMEM)
+            {
+                return NULL;
+            }
+
+            vec2[k].end_station = malloc(strlen(eAux->station_name)+1);
+
             if (errno == ENOMEM)
             {
             return NULL;
             }
-            strcpy(vec2[i].end_station, eAux->station_name);
+
+        strcpy(vec2[k].start_station, sAux->station_name);
+        strcpy(vec2[k].end_station, eAux->station_name);
+        
+         vec2[k].trips_start_end = bikeSharing->matrix[i][j];
+         vec2[k].trips_end_start = bikeSharing->matrix[j][i];
+
+         k++;
+
         }
+
     }
     return vec2;
 }
