@@ -102,6 +102,8 @@ static TList addStationRec(TList list, char *station_name, int id)
 
         new->member_trips = 0; // inicializo los viajes de miembros en 0
 
+        new->circular_trips = 0; // inicializo los viajes circulares
+
         for (int i = 0; i < MONTHS; i++)
         {
             new->months[i] = 0; // inicializo los viajes del mes en 0
