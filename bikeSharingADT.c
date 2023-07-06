@@ -25,7 +25,7 @@ typedef struct node
 {
     size_t id;
     int index;
-    int months[12];
+    int months[MONTHS];
     char station_name[MAX_LETTERS];
     size_t member_trips;
     struct node *tail;
