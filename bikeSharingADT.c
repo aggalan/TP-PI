@@ -379,6 +379,7 @@ q3_struct *q3(bikeSharingADT bikeSharing)
         {
             vec3[i].months[j] = aux->months[j];
         }
+        aux = aux->tail;
     }
 
     return vec3;
