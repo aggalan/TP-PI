@@ -18,7 +18,8 @@ int main(int argc, char * argv[])
 
     //Checks for errors int he amount of parameters
 
-    if (argc > 5 || argc < 4) 
+
+    if (argc > 5 || argc < 3) 
     {
         perror("Error in the amount of parameters");
         return 1;
