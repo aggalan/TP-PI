@@ -184,7 +184,7 @@ static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_i
 
 // nose si va a hacer falta sort
 
-void addTrip(bikeSharingADT bikeSharing, int isMember, size_t startId, size_t endId, int year, int month, int sYear, int eYear)
+void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear)
 {
     int idxStart, idxEnd, flag = 0;
     TList sAux;

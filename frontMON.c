@@ -113,10 +113,7 @@ int main(int argc, char * argv[])
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
     int firstline2 = 0;
-    char * token = malloc(100);
-    char str[100]; 
-    const char s[2] = ";"; 
-    int y, m;
+  
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
         if(!firstline2)
