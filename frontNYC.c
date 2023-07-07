@@ -18,7 +18,8 @@ int main(int argc, char * argv[])
 
     //Checks for errors int he amount of parameters
 
-    if (argc > 5 || argc < 4) 
+
+    if (argc > 5 || argc < 3) 
     {
         perror("Error in the amount of parameters");
         return 1;
@@ -28,7 +29,7 @@ int main(int argc, char * argv[])
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
-    char * sName = malloc(MAX_WORD_LENGTH);
+    char * sName = malloc(MAX_LINE_LENGTH);
     
     if (errno == ENOMEM)
     {
@@ -39,7 +40,7 @@ int main(int argc, char * argv[])
 
     size_t sId;
 
-    char *token;
+    char *token = malloc(MAX_LINE_LENGTH);
 
     int i = 0;
 
@@ -96,12 +97,12 @@ int main(int argc, char * argv[])
         limit_end_year = 3000;
     }
     else if (argc == 4) {
-        limit_start_year = argv[3];
+        limit_start_year = atoi(argv[3]);
         limit_end_year = 3000;
     }
     else if (argc == 5) {
-        limit_start_year = argv[3];
-        limit_end_year = argv[4];
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = atoi(argv[4]);
     }
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
@@ -114,7 +115,6 @@ int main(int argc, char * argv[])
         {
             switch(i) {
                 case 0:
-                    int j;
                     for (int j=0; j<2; j++) { // Arreglar este magic number !
                         date_token = strtok(token, date_delim);
                         if (j == 0) {
@@ -166,11 +166,7 @@ int main(int argc, char * argv[])
     // QUERY 2 HTML
 
     htmlTable table2 = newTable( "query2.html",4,"Station A","Station B","Trips A -> B","Trips B -> A" );
-
-    for ( int i = 0; (cantStations*cantStations) - cantStations; i++ ) {
-        addHTMLRow( table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start );    
-    }
-    closeHTMLTable(table2);
+    
 
     // QUERY 3 HTML CREATION
 
@@ -181,24 +177,7 @@ int main(int argc, char * argv[])
 
     htmlTable table4 = newTable( "query4.html",2,"Station", "RoundingTrips" );
 
-    for ( int i = 0; i < cantStations; i++ ) {
-        
-        //QUERY 4
-        
-        addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
-
-        //QUERY 3
-
-        addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
-
-        //QUERY 1
-
-        addHTMLRow( table1, vec1[i].station_name, vec1[i].trips ); 
-
-    }
-    closeHTMLTable(table1);
-    closeHTMLTable(table3);
-    closeHTMLTable(table4);
+    
 
     //QUERY 1 CSV TITLES
 
@@ -207,7 +186,7 @@ int main(int argc, char * argv[])
     fprintf(fp_q1, "StartedTrips\n");
     
 
-    //QUERY 2 CSV 
+    //QUERY 2 CSV Y HTML
 
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;");
@@ -215,10 +194,17 @@ int main(int argc, char * argv[])
     fprintf(fp_q2, "Trips A -> B;");
     fprintf(fp_q2, "Trips B -> A\n");
     for ( int i = 0; i < (cantStations*cantStations) - cantStations; i++ ) { // VER HASTA DONDE VA I
+        
+        //QUERY 2 CSV
+        
         fprintf(fp_q2, "%s;", vec2[i].start_station);
-        fprintf(fp_q2,"%d;" ,vec1[i].trips);
-        fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
-        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
+        fprintf(fp_q2,"%ld;" ,vec1[i].trips);
+        fprintf(fp_q2, "%ld;", vec2[i].trips_start_end);
+        fprintf(fp_q2, "%ld\n", vec2[i].trips_end_start);
+
+        //QUERY 2 HTML
+
+        addHTMLRow( table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start ); 
     }
 
     //QUERY 3 CSV TITLES
@@ -238,7 +224,7 @@ int main(int argc, char * argv[])
     fprintf(fp_q3, "D\n");
     
 
-    //QUERY 1, 3, 4 CSV INFO
+    //QUERY 1, 3, 4 CSV AND HTML INFO
 
     fp_q4 = fopen("query4.csv", "w");
     fprintf(fp_q4, "Station;");
@@ -248,24 +234,41 @@ int main(int argc, char * argv[])
         //QUERY 4
 
         fprintf( fp_q4, "%s;", vec4[i].station_name );
-        fprintf( fp_q4, "%d\n", vec4[i].trips ); 
+        fprintf( fp_q4, "%ld\n", vec4[i].trips ); 
 
         //QUERY 3
 
         for ( int j = 0; j<12 ;j++)  {
-            fprintf(fp_q3, "%d;",vec3[i].months[j]);
+            fprintf(fp_q3, "%ld;",vec3[i].months[j]);
         }
         fprintf(fp_q3, "%s\n",vec3[i].station_name);
 
         //QUERY 1
 
         fprintf(fp_q1, "%s;", vec1[i].station_name);
-        fprintf(fp_q1, "%d\n", vec1[i].trips);
+        fprintf(fp_q1, "%ld\n", vec1[i].trips);
+
+
+        //QUERY 4 
+        
+        addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
+
+        //QUERY 3
+
+        addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
+
+        //QUERY 1
+
+        addHTMLRow( table1, vec1[i].station_name, vec1[i].trips ); 
 
 
     }
 
 
+    closeHTMLTable(table1);
+    closeHTMLTable(table2);
+    closeHTMLTable(table3);
+    closeHTMLTable(table4);
 
     fclose(fp_q1);
     fclose(fp_q2);
