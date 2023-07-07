@@ -92,10 +92,8 @@ int main(int argc, char * argv[])
     // When finished loading the stations, we load the trips (reutilizing str)
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
 
-    char * date_delim = "-";
-    char * date_token;
-    int start_year, start_month;
-    size_t start_id, end_id;
+   int start_year, start_month;
+    int start_id, end_id;
     char is_member;
 
     int limit_start_year, limit_end_year; 
@@ -114,51 +112,42 @@ int main(int argc, char * argv[])
     }
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
-
-    i=0;
-    firstline = 0;
+    int firstline2 = 0;
+    char * token = malloc(100);
+    char str[100]; 
+    const char s[2] = ";"; 
+    int y, m;
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
-
-        if (firstline == 0) {
-            firstline++;
+        if(!firstline2)
+        {
+            firstline2++;
             continue;
         }
 
-        token = strtok(str, s);
-        i=0;
-        while (token != NULL) 
-        {
-            switch(i) {
-                case 0:
-                    for (int j=0; j<2; j++) { // Arreglar este magic number !
-                        date_token = strtok(token, date_delim);
-                        if (j == 0) {
-                            start_year = atoi(date_token);
-                        }
-                        else{
-                            start_month = atoi(date_token);
-                        }
-                    }
-                    break;
+        int i = 0;
 
-                case 1:
-                    start_id = atoi(token);
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    end_id = atoi(token);
-                    break;
-                case 4:
-                    is_member = atoi(token);
-                    break;
+        token = strtok(str, s);
+        for (i=0; token != NULL; i++) 
+        {
+
+            if (i==0){
+                sscanf(token, "%d-%d", &start_year, &start_month);
+                }
+
+            if (i==1) {
+                start_id = atoi(token);
+            }
+            if (i==3) {
+                end_id = atoi(token);
+            }
+            if (i==4) {
+                is_member = atoi(token);
             }
             token = strtok(NULL, s);
-            i++;
-            
 
             addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
+        
         }
     }
 
