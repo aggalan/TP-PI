@@ -59,8 +59,16 @@ int main(int argc, char * argv[])
             return(-1);
     }
 
+    int firstline = 0;
+
     while(fgets(str, sizeof(str), fp_stations) != NULL)
     {
+
+        if (firstline == 0) {
+            firstline++;
+            continue;
+        }
+
         i = 0;
             
         token = strtok(str, s);
@@ -107,10 +115,18 @@ int main(int argc, char * argv[])
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
 
+    firstline = 0;
     i=0;
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
+
+        if (firstline == 0) {
+            firstline++;
+            continue;
+        }
+
         token = strtok(str, s);
+        i = 0;
         while (token != NULL) 
         {
             switch(i) {
@@ -138,6 +154,7 @@ int main(int argc, char * argv[])
                     is_member = atoi(token);
                     break;
             }
+            token = strtok(NULL, s);
             i++;
             
 

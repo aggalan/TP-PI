@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
             {
                 sId = atoi(token);
             }
-            else
+            if(i == 1)
             {
                 strcpy(sName, token);
             }
