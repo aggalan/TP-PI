@@ -254,5 +254,10 @@ int main(int argc, char * argv[])
 
 
 
-
+    fclose(fp_q1);
+    fclose(fp_q2);
+    fclose(fp_q3);
+    fclose(fp_q4);
+    fclose(fp_stations);
+    fclose(fp_trips);
 }
