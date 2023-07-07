@@ -64,7 +64,7 @@ int main(int argc, char * argv[])
         i = 0;
             
         token = strtok(str, s);
-        while( token != NULL )
+        while( token != NULL && i < 2 )
         {
             if(i == 0)
             {
