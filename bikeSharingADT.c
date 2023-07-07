@@ -48,7 +48,7 @@ bikeSharingADT newBikeSharing()
     return new;
 }
 
-void freeBikeSharing(bikeSharingADT bs)
+void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4)
 {
     TList curr = bs->first, aux;
 
@@ -69,6 +69,10 @@ void freeBikeSharing(bikeSharingADT bs)
 
     free(bs->matrix);
     free(bs);
+    free(vec1);
+    free(vec2);
+    free(vec3);
+    free(vec4);
 }
 
 static TList addStationRec(TList list, char *station_name, int id)

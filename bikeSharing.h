@@ -26,7 +26,7 @@ typedef struct q3_struct {
 } q3_struct;
 
 /*libera toda memoria reservada por el TAD*/
-void freeBikeSharing(bikeSharingADT bikeSharing);
+void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4);
 
 /*Retorna un nuevo bikesharing. Al principio esta vacio*/
 bikeSharingADT newBikeSharing();
