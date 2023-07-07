@@ -59,13 +59,13 @@ int main(int argc, char * argv[])
             return(-1);
     }
 
-    int newline = 0;
+    int firstline = 0;
 
     while(fgets(str, sizeof(str), fp_stations) != NULL)
     {
 
-        if (newline == 0) {
-            newline++;
+        if (firstline == 0) {
+            firstline++;
             continue;
         }
 
@@ -116,12 +116,12 @@ int main(int argc, char * argv[])
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
 
     i=0;
-    newline = 0;
+    firstline = 0;
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
 
-        if (newline == 0) {
-            newline++;
+        if (firstline == 0) {
+            firstline++;
             continue;
         }
 
