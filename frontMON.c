@@ -29,7 +29,7 @@ int main(int argc, char * argv[])
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
-    char * sName = malloc(MAX_WORD_LENGTH);
+    char * sName = malloc(MAX_LINE_LENGTH);
     
     if (errno == ENOMEM)
     {
@@ -40,7 +40,7 @@ int main(int argc, char * argv[])
 
     size_t sId;
 
-    char *token;
+    char *token = malloc(MAX_LINE_LENGTH);
 
     int i = 0;
 
@@ -249,7 +249,7 @@ int main(int argc, char * argv[])
         fprintf(fp_q1, "%ld\n", vec1[i].trips);
 
 
-        //QUERY 4
+        //QUERY 4 
         
         addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
 
