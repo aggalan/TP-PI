@@ -203,7 +203,7 @@ void addTrip(bikeSharingADT bikeSharing, char isMember, size_t startId, size_t e
     }
 
     // Agregamos viaje a la estacion por mes
-    sAux->months[month]++;
+    sAux->months[month-1]++;
 
     // Agregamos los viajes circulares
     if (startId == endId && (year >= sYear && year <= eYear))
