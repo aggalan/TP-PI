@@ -96,12 +96,12 @@ int main(int argc, char * argv[])
         limit_end_year = 3000;
     }
     else if (argc == 4) {
-        limit_start_year = argv[3];
+        limit_start_year = atoi(argv[3]);
         limit_end_year = 3000;
     }
     else if (argc == 5) {
-        limit_start_year = argv[3];
-        limit_end_year = argv[4];
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = atoi(argv[4]);
     }
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
@@ -114,7 +114,6 @@ int main(int argc, char * argv[])
         {
             switch(i) {
                 case 0:
-                    int j;
                     for (int j=0; j<2; j++) { // Arreglar este magic number !
                         date_token = strtok(token, date_delim);
                         if (j == 0) {
@@ -216,9 +215,9 @@ int main(int argc, char * argv[])
     fprintf(fp_q2, "Trips B -> A\n");
     for ( int i = 0; i < (cantStations*cantStations) - cantStations; i++ ) { // VER HASTA DONDE VA I
         fprintf(fp_q2, "%s;", vec2[i].start_station);
-        fprintf(fp_q2,"%d;" ,vec1[i].trips);
-        fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
-        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
+        fprintf(fp_q2,"%ld;" ,vec1[i].trips);
+        fprintf(fp_q2, "%ld;", vec2[i].trips_start_end);
+        fprintf(fp_q2, "%ld\n", vec2[i].trips_end_start);
     }
 
     //QUERY 3 CSV TITLES
@@ -248,19 +247,19 @@ int main(int argc, char * argv[])
         //QUERY 4
 
         fprintf( fp_q4, "%s;", vec4[i].station_name );
-        fprintf( fp_q4, "%d\n", vec4[i].trips ); 
+        fprintf( fp_q4, "%ld\n", vec4[i].trips ); 
 
         //QUERY 3
 
         for ( int j = 0; j<12 ;j++)  {
-            fprintf(fp_q3, "%d;",vec3[i].months[j]);
+            fprintf(fp_q3, "%ld;",vec3[i].months[j]);
         }
         fprintf(fp_q3, "%s\n",vec3[i].station_name);
 
         //QUERY 1
 
         fprintf(fp_q1, "%s;", vec1[i].station_name);
-        fprintf(fp_q1, "%d\n", vec1[i].trips);
+        fprintf(fp_q1, "%ld\n", vec1[i].trips);
 
 
     }
