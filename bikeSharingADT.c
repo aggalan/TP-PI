@@ -253,13 +253,13 @@ static TList next(bikeSharingADT bikeSharing, char start)
     return aux;
 }
 
-typedef int (*compare)(const void * , const void *);
 
-static int q1_cmp(const q1_struct *e1, const q1_struct *e2)
+
+static int q1_cmp(const void *e1, const void *e2)
 {
     const q1_struct *ptr1 = (const q1_struct *)e1;
     const q1_struct *ptr2 = (const q1_struct *)e2;
-    return ptr1->trips - ptr2->trips;
+    return (ptr2->trips - ptr1->trips);
 }
 
 q1_struct *q1(bikeSharingADT bikeSharing, int query)
@@ -293,7 +293,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
         aux = aux->tail;
     }
 
-    qsort(vec1, bikeSharing->cant, sizeof(q1_struct), (compare)q1_cmp);
+    qsort(vec1, bikeSharing->cant, sizeof(q1_struct), q1_cmp);
 
     return vec1;
 }
