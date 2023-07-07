@@ -55,6 +55,7 @@ void freeBikeSharing(bikeSharingADT bs)
     while (curr != NULL)
     {
         aux = curr->tail;
+        free(curr->station_name);
         free(curr);
         curr = aux;
     }
