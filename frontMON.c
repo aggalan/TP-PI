@@ -97,12 +97,12 @@ int main(int argc, char * argv[])
         limit_end_year = 3000;
     }
     else if (argc == 4) {
-        limit_start_year = atoi(argv[4]);
+        limit_start_year = atoi(argv[3]);
         limit_end_year = 3000;
     }
     else if (argc == 5) {
-        limit_start_year = atoi(argv[4]);
-        limit_end_year = atoi(argv[5]);
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = atoi(argv[4]);
     }
 
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
