@@ -10,7 +10,7 @@
 
 int main(int argc, char * argv[])
 {
-    FILE * fp_stations, * fp_trips;
+    FILE * fp_stations, * fp_trips, * fp_q1, * fp_q2, * fp_q3, * fp_q4;
     char str[MAX_LINE_LENGTH];               // max strg length
     const char s[2] = ";";    // sets the break parameter
     errno = 0;
@@ -156,44 +156,103 @@ int main(int argc, char * argv[])
     q1_struct * vec4 = q1( bikeSharing, 4);
 
 
+    // PARA TODAS LAS QUERYS VER SI LA MARA DE FINAL ESTA BIEN!!!
 
-    // QUERY 1
+
+    // QUERY 1 HTML
 
     htmlTable table1 = newTable( "query1.html",2,"Station", "StartedTrips" );
 
-    for ( int i = 0; vec1[i].trips == NULL; i++ ) {
+    for ( int i = 0; vec1[i].trips != NULL; i++ ) {
         addHTMLRow( table1, vec1[i].station_name, vec1[i].trips );    
     }
     closeHTMLTable(table1);
 
 
-    // QUERY 2
+    // QUERY 2 HTML
 
     htmlTable table2 = newTable( "query2.html",4,"Station A","Station B","Trips A -> B","Trips B -> A" );
 
-    for ( int i = 0; vec2[i].trips_end_start == NULL; i++ ) {
+    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) {
         addHTMLRow( table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start );    
     }
     closeHTMLTable(table2);
 
-    // QUERY 3
+    // QUERY 3 HTML
 
     htmlTable table3 = newTable( "query3.html",13,"J","F","M","A","M","J","J","A","S","O","N","D","Station" );
 
-    for ( int i = 0; vec3[i].months == NULL; i++ ) {
+    for ( int i = 0; vec3[i].months != NULL; i++ ) {
         addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
     }
     closeHTMLTable(table3);
 
-    // QUERY 4
+    // QUERY 4 HTML
 
     htmlTable table4 = newTable( "query4.html",2,"Station", "RoundingTrips" );
 
-    for ( int i = 0; vec4[i].trips == NULL; i++ ) {
+    for ( int i = 0; vec4[i].trips != NULL; i++ ) {
         addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
     }
     closeHTMLTable(table4);
 
-    //CRERCION MAGICA DE CSV
+    //QUERY 1 CSV
+
+    fp_q1 = fopen("query1.csv", "w");
+    fprintf(fp_q1, "Station;");
+    fprintf(fp_q1, "StartedTrips\n");
+    for ( int i = 0; vec1[i].trips != NULL; i++ ) {
+        fprintf(fp_q1, "%s;", vec1[i].station_name);
+        fprintf(fp_q1, "%d\n", vec1[i].trips);
+    }
+
+    //QUERY 2 CSV
+
+    fp_q2 = fopen("query2.csv", "w");
+    fprintf(fp_q2, "StationA;");
+    fprintf(fp_q2, "StationB;");
+    fprintf(fp_q2, "Trips A -> B;");
+    fprintf(fp_q2, "Trips B -> A\n");
+    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) {
+        fprintf(fp_q2, "%s;", vec2[i].start_station);
+        fprintf(fp_q2,"%d;" ,vec1[i].trips);
+        fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
+        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
+    }
+
+    //QUERY 3 CSV
+
+    fp_q3 = fopen("query3.csv", "w");
+    fprintf(fp_q3, "J;");
+    fprintf(fp_q3, "F;");
+    fprintf(fp_q3, "M;");
+    fprintf(fp_q3, "A;");
+    fprintf(fp_q3, "M;");
+    fprintf(fp_q3, "J;");
+    fprintf(fp_q3, "J;");
+    fprintf(fp_q3, "A;");
+    fprintf(fp_q3, "S;");
+    fprintf(fp_q3, "O;");
+    fprintf(fp_q3, "N;");
+    fprintf(fp_q3, "D\n");
+    for( int i = 0; vec3[i].months != NULL; i++ ) {
+            for ( int j = 0; j<12 ;j++)  {
+                fprintf(fp_q3, "%d;",vec3[i].months[j]);
+            }
+            fprintf(fp_q3, "%s\n",vec3[i].station_name);
+    }
+
+    //QUERY 4 CSV
+
+    fp_q4 = fopen("query4.csv", "w");
+    fprintf(fp_q4, "Station;");
+    fprintf(fp_q4, "RoundingTrips\n");
+    for ( int i = 0; vec4[i].trips != NULL; i++ ) {
+        fprintf( fp_q4, "%s;", vec4[i].station_name );
+        fprintf( fp_q4, "%d\n", vec4[i].trips ); 
+    }
+
+
+
 
 }
