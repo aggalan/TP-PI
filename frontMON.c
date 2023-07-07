@@ -13,6 +13,7 @@ int main(int argc, char * argv[])
     FILE * fp_stations, * fp_trips, * fp_q1, * fp_q2, * fp_q3, * fp_q4;
     char str[MAX_LINE_LENGTH];               // max strg length
     const char s[2] = ";";    // sets the break parameter
+    size_t cantStations = 0; // counter for the number of stations
     errno = 0;
 
     //Checks for errors int he amount of parameters
@@ -75,7 +76,7 @@ int main(int argc, char * argv[])
             token = strtok(NULL, s); 
             i++;
         }
-
+        cantStations++;
         addStation(bikeSharing, sName, sId);
     }
     
@@ -156,44 +157,47 @@ int main(int argc, char * argv[])
     q1_struct * vec4 = q1( bikeSharing, 4);
 
 
-    // PARA TODAS LAS QUERYS VER SI LA MARA DE FINAL ESTA BIEN!!!
 
-
-    // QUERY 1 HTML
+    // QUERY 1 HTML CREATION
 
     htmlTable table1 = newTable( "query1.html",2,"Station", "StartedTrips" );
-
-    for ( int i = 0; vec1[i].trips != NULL; i++ ) {
-        addHTMLRow( table1, vec1[i].station_name, vec1[i].trips );    
-    }
-    closeHTMLTable(table1);
 
 
     // QUERY 2 HTML
 
     htmlTable table2 = newTable( "query2.html",4,"Station A","Station B","Trips A -> B","Trips B -> A" );
 
-    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) {
+    for ( int i = 0; (cantStations*cantStations) - cantStations; i++ ) {
         addHTMLRow( table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start );    
     }
     closeHTMLTable(table2);
 
-    // QUERY 3 HTML
+    // QUERY 3 HTML CREATION
 
     htmlTable table3 = newTable( "query3.html",13,"J","F","M","A","M","J","J","A","S","O","N","D","Station" );
 
-    for ( int i = 0; vec3[i].months != NULL; i++ ) {
-        addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
-    }
-    closeHTMLTable(table3);
 
-    // QUERY 4 HTML 
+    // QUERY 1, 3, 4 HTML
 
     htmlTable table4 = newTable( "query4.html",2,"Station", "RoundingTrips" );
 
-    for ( int i = 0; vec4[i].trips != NULL; i++ ) {
+    for ( int i = 0; i < cantStations; i++ ) {
+        
+        //QUERY 4
+        
         addHTMLRow( table4, vec4[i].station_name, vec4[i].trips );    
+
+        //QUERY 3
+
+        addHTMLRow( table3,vec3[i].months[0] ,vec3[i].months[1] ,vec3[i].months[2] ,vec3[i].months[3] ,vec3[i].months[4] ,vec3[i].months[5] ,vec3[i].months[6] ,vec3[i].months[7] ,vec3[i].months[8] ,vec3[i].months[9] ,vec3[i].months[10] ,vec3[i].months[11] ,vec3[i].station_name );    
+
+        //QUERY 1
+
+        addHTMLRow( table1, vec1[i].station_name, vec1[i].trips ); 
+
     }
+    closeHTMLTable(table1);
+    closeHTMLTable(table3);
     closeHTMLTable(table4);
 
     //QUERY 1 CSV TITLES
@@ -210,7 +214,7 @@ int main(int argc, char * argv[])
     fprintf(fp_q2, "StationB;");
     fprintf(fp_q2, "Trips A -> B;");
     fprintf(fp_q2, "Trips B -> A\n");
-    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) { // VER HASTA DONDE VA I
+    for ( int i = 0; i < (cantStations*cantStations) - cantStations; i++ ) { // VER HASTA DONDE VA I
         fprintf(fp_q2, "%s;", vec2[i].start_station);
         fprintf(fp_q2,"%d;" ,vec1[i].trips);
         fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
@@ -239,7 +243,7 @@ int main(int argc, char * argv[])
     fp_q4 = fopen("query4.csv", "w");
     fprintf(fp_q4, "Station;");
     fprintf(fp_q4, "RoundingTrips\n");
-    for ( int i = 0; vec4[i].trips != NULL; i++ ) { // VER HASTA DONDE VA I
+    for ( int i = 0; i < cantStations; i++ ) { // VER HASTA DONDE VA I
 
         //QUERY 4
 
@@ -270,12 +274,12 @@ int main(int argc, char * argv[])
     fclose(fp_stations);
     fclose(fp_trips);
 
-    for (int i = 0; i < ; i++) { //ver hasta donde se hace el ciclo
+    for (int i = 0; i < cantStations ; i++) { //ver hasta donde se hace el ciclo
     free(vec3[i].station_name);
     free(vec1[i].station_name);
     free(vec4[i].station_name);
     }
-    for (int i = 0; i < ; i++) { //ver hasta donde se hace el ciclos
+    for (int i = 0; i < (cantStations*cantStations) - cantStations; i++) { //ver hasta donde se hace el ciclos
     free(vec2[i].start_station);
     free(vec2[i].end_station);
     }
