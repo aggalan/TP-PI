@@ -187,7 +187,7 @@ int main(int argc, char * argv[])
     }
     closeHTMLTable(table3);
 
-    // QUERY 4 HTML
+    // QUERY 4 HTML 
 
     htmlTable table4 = newTable( "query4.html",2,"Station", "RoundingTrips" );
 
@@ -196,31 +196,28 @@ int main(int argc, char * argv[])
     }
     closeHTMLTable(table4);
 
-    //QUERY 1 CSV
+    //QUERY 1 CSV TITLES
 
     fp_q1 = fopen("query1.csv", "w");
     fprintf(fp_q1, "Station;");
     fprintf(fp_q1, "StartedTrips\n");
-    for ( int i = 0; vec1[i].trips != NULL; i++ ) {
-        fprintf(fp_q1, "%s;", vec1[i].station_name);
-        fprintf(fp_q1, "%d\n", vec1[i].trips);
-    }
+    
 
-    //QUERY 2 CSV
+    //QUERY 2 CSV 
 
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;");
     fprintf(fp_q2, "StationB;");
     fprintf(fp_q2, "Trips A -> B;");
     fprintf(fp_q2, "Trips B -> A\n");
-    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) {
+    for ( int i = 0; vec2[i].trips_end_start != NULL; i++ ) { // VER HASTA DONDE VA I
         fprintf(fp_q2, "%s;", vec2[i].start_station);
         fprintf(fp_q2,"%d;" ,vec1[i].trips);
         fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
         fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
     }
 
-    //QUERY 3 CSV
+    //QUERY 3 CSV TITLES
 
     fp_q3 = fopen("query3.csv", "w");
     fprintf(fp_q3, "J;");
@@ -235,21 +232,33 @@ int main(int argc, char * argv[])
     fprintf(fp_q3, "O;");
     fprintf(fp_q3, "N;");
     fprintf(fp_q3, "D\n");
-    for( int i = 0; vec3[i].months != NULL; i++ ) {
-            for ( int j = 0; j<12 ;j++)  {
-                fprintf(fp_q3, "%d;",vec3[i].months[j]);
-            }
-            fprintf(fp_q3, "%s\n",vec3[i].station_name);
-    }
+    
 
-    //QUERY 4 CSV
+    //QUERY 1, 3, 4 CSV INFO
 
     fp_q4 = fopen("query4.csv", "w");
     fprintf(fp_q4, "Station;");
     fprintf(fp_q4, "RoundingTrips\n");
-    for ( int i = 0; vec4[i].trips != NULL; i++ ) {
+    for ( int i = 0; vec4[i].trips != NULL; i++ ) { // VER HASTA DONDE VA I
+
+        //QUERY 4
+
         fprintf( fp_q4, "%s;", vec4[i].station_name );
         fprintf( fp_q4, "%d\n", vec4[i].trips ); 
+
+        //QUERY 3
+
+        for ( int j = 0; j<12 ;j++)  {
+            fprintf(fp_q3, "%d;",vec3[i].months[j]);
+        }
+        fprintf(fp_q3, "%s\n",vec3[i].station_name);
+
+        //QUERY 1
+
+        fprintf(fp_q1, "%s;", vec1[i].station_name);
+        fprintf(fp_q1, "%d\n", vec1[i].trips);
+
+
     }
 
 
