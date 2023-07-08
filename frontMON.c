@@ -55,16 +55,12 @@ int main(int argc, char *argv[])
         return (-1);
     }
 
-    int firstline = 0;
+
+    fgets(str, sizeof(str), fp_stations); // descarto primera linea;
+   
 
     while (fgets(str, sizeof(str), fp_stations) != NULL)
     {
-
-        if (firstline == 0)
-        {
-            firstline++;
-            continue;
-        }
 
         i = 0;
 
@@ -87,7 +83,9 @@ int main(int argc, char *argv[])
     }
 
     
-    size_t cantStations = setMatrix(bikeSharing);
+    int cantStations;
+    
+    setMatrix(bikeSharing, &cantStations);
 
 
     // When finished loading the stations, we load the trips (reutilizing str)
@@ -107,7 +105,7 @@ int main(int argc, char *argv[])
     else if (argc == 4)
     {
         limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;    /// guarda esto porque capaz te hace un archivo hasta el 3000 todo vacio
+        limit_end_year = 3000;                      /// guarda esto porque capaz te hace un archivo hasta el 3000 todo vacio
     }
     else if (argc == 5)
     {
@@ -115,16 +113,13 @@ int main(int argc, char *argv[])
         limit_end_year = atoi(argv[4]);
     }
 
+
+    fgets(str, sizeof(str), fp_trips); // descarto la primera linea
+
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
-    int firstline2 = 0;
 
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
-        if (!firstline2)
-        {
-            firstline2++;
-            continue;
-        }
 
         int i = 0;
 
@@ -155,6 +150,9 @@ int main(int argc, char *argv[])
         }
     }
 
+
+    // CREO LOS VECTORES CON LA INFORMACION PARA LAS 4 QUERYS
+
     q1_struct *vec1 = q1(bikeSharing, 1);
 
     q2_struct *vec2 = q2(bikeSharing);
@@ -163,29 +161,29 @@ int main(int argc, char *argv[])
 
     q1_struct *vec4 = q1(bikeSharing, 4);
 
-    // QUERY 1 HTML CREATION
+   
+   
+    // CREACION TABLAS PARA LOS 4 QUERYS
 
     htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
 
-    // QUERY 2 HTML
-
     htmlTable table2 = newTable("query2.html", 4, "Station A", "Station B", "Trips A -> B", "Trips B -> A");
 
-    // QUERY 3 HTML CREATION
-
-    htmlTable table3 = newTable("query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
-
-    // QUERY 1, 3, 4 HTML
+    htmlTable table3 = newTable("query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station"); 
 
     htmlTable table4 = newTable("query4.html", 2, "Station", "RoundingTrips");
 
-    // QUERY 1 CSV TITLES
+    
+    
+    // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
+
+    //crear un solo string largo
+
 
     fp_q1 = fopen("query1.csv", "w");
     fprintf(fp_q1, "Station;");
     fprintf(fp_q1, "StartedTrips\n");
 
-    // QUERY 2 CSV Y HTML
 
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;");
@@ -194,24 +192,7 @@ int main(int argc, char *argv[])
     fprintf(fp_q2, "Trips B -> A\n");
 
 
-    for (int i = 0; i < (cantStations * cantStations) - cantStations; i++)
-    { // VER HASTA DONDE VA I
-
-        // QUERY 2 CSV
-
-        fprintf(fp_q2, "%s;", vec2[i].start_station);
-        fprintf(fp_q2, "%s;", vec2[i].end_station);
-        fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
-        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
-
-        // QUERY 2 HTML
-
-        addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start);
-    }
-
-    // QUERY 3 CSV TITLES
-
-    fp_q3 = fopen("query3.csv", "w");
+    fp_q3 = fopen("query3.csv", "w"); 
     fprintf(fp_q3, "J;");
     fprintf(fp_q3, "F;");
     fprintf(fp_q3, "M;");
@@ -225,43 +206,99 @@ int main(int argc, char *argv[])
     fprintf(fp_q3, "N;");
     fprintf(fp_q3, "D\n");
 
-    // QUERY 1, 3, 4 CSV AND HTML INFO
 
     fp_q4 = fopen("query4.csv", "w");
     fprintf(fp_q4, "Station;");
     fprintf(fp_q4, "RoundingTrips\n");
+
+
+
+    //creo strings para pasar de int  (capaz podemos hacer uno solo largo)
+
+
+     char pasajeString[15];
+     char pasajeString2[15];
+
+     char pasajeJ[10];  
+     char pasajeF[10];
+     char pasajeM[10];
+     char pasajeA[10];
+     char pasajeMy[10];  
+     char pasajeJu[10];
+     char pasajeJl[10];
+     char pasajeAg[10];
+     char pasajeS[10];  
+     char pasajeO[10];
+     char pasajeN[10];
+     char pasajeD[10];
+
+
+     // AGREGAMOS LA INFO A LOS QUERYS (PODRIAMOS HACER UN SOLO CICLO Y QUE LOS 1 3 4 SE CORTEN CUANDO I >= CANTSTATIONS CON UN IF)
+
+
+    for (int i = 0; i < (cantStations * cantStations) - cantStations; i++)  // la longitud de este ciclo esta mal
+    { 
+
+        // QUERY 2 CSV
+
+        sprintf(pasajeString, "%d",vec2[i].trips_end_start );
+        sprintf(pasajeString2, "%d",vec2[i].trips_start_end );
+
+        fprintf(fp_q2, "%s;", vec2[i].start_station);
+        fprintf(fp_q2, "%s;", vec2[i].end_station);
+        fprintf(fp_q2, "%d;", vec2[i].trips_start_end );
+        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
+
+        // QUERY 2 HTML
+
+        addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, pasajeString2, pasajeString);
+    }
+
+ 
     for (int i = 0; i < cantStations; i++)
-    { // VER HASTA DONDE VA I
-
-        // QUERY 4
-
-        fprintf(fp_q4, "%s;", vec4[i].station_name);
-        fprintf(fp_q4, "%ld\n", vec4[i].trips);
-
-        // QUERY 3
-
-        for (int j = 0; j < 12; j++)
-        {
-            fprintf(fp_q3, "%d;", vec3[i].months[j]);
-        }
-        fprintf(fp_q3, "%s\n", vec3[i].station_name);
-
-        // QUERY 1
+    { 
+        // QUERY 1 CSV Y HTML
 
         fprintf(fp_q1, "%s;", vec1[i].station_name);
         fprintf(fp_q1, "%ld\n", vec1[i].trips);
 
-        // QUERY 4
+        sprintf(pasajeString2, "%ld",vec1[i].trips );
+        addHTMLRow(table1, vec1[i].station_name, pasajeString2);
 
-        addHTMLRow(table4, vec4[i].station_name, vec4[i].trips);
+        // QUERY 3 CSV Y HTML
 
-        // QUERY 3
+         for (int j = 0; j < 12; j++)
+        {
+            fprintf(fp_q3, "%d;", vec3[i].months[j]);
+        }
+            fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
-        addHTMLRow(table3, vec3[i].months[0], vec3[i].months[1], vec3[i].months[2], vec3[i].months[3], vec3[i].months[4], vec3[i].months[5], vec3[i].months[6], vec3[i].months[7], vec3[i].months[8], vec3[i].months[9], vec3[i].months[10], vec3[i].months[11], vec3[i].station_name);
+            sprintf(pasajeJ, "%ld",vec1[i].trips );  // podriamos hacer que el q1 directamente haga sprintf al struct y no hacerlos en el front
+            sprintf(pasajeF, "%ld",vec1[i].trips );
+            sprintf(pasajeM, "%ld",vec1[i].trips );
+            sprintf(pasajeA, "%ld",vec1[i].trips );
+            sprintf(pasajeMy, "%ld",vec1[i].trips );
+            sprintf(pasajeJu, "%ld",vec1[i].trips );
+            sprintf(pasajeJl, "%ld",vec1[i].trips );
+            sprintf(pasajeAg, "%ld",vec1[i].trips );
+            sprintf(pasajeS, "%ld",vec1[i].trips );
+            sprintf(pasajeO, "%ld",vec1[i].trips );
+            sprintf(pasajeN, "%ld",vec1[i].trips );
+            sprintf(pasajeD, "%ld",vec1[i].trips );
 
-        // QUERY 1
+        addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
 
-        addHTMLRow(table1, vec1[i].station_name, vec1[i].trips);
+        //addHTMLRow(table3, vec3[i].months[0], vec3[i].months[1], vec3[i].months[2], vec3[i].months[3], vec3[i].months[4], vec3[i].months[5], vec3[i].months[6], vec3[i].months[7], vec3[i].months[8], vec3[i].months[9], vec3[i].months[10], vec3[i].months[11], vec3[i].station_name);
+
+
+        // QUERY 4 CSV Y HTML
+
+        fprintf(fp_q4, "%s;", vec4[i].station_name);
+        fprintf(fp_q4, "%ld\n", vec4[i].trips);
+
+        sprintf(pasajeString, "%ld",vec4[i].trips );
+        addHTMLRow(table4, vec4[i].station_name, pasajeString);
+
     }
 
     closeHTMLTable(table1);
@@ -276,6 +313,11 @@ int main(int argc, char *argv[])
     fclose(fp_stations);
     fclose(fp_trips);
 
+
+    // esto creo que esta en el back
+
+    /* 
+
     for (int i = 0; i < cantStations; i++)
     { // ver hasta donde se hace el ciclo
         free(vec3[i].station_name);
@@ -287,6 +329,8 @@ int main(int argc, char *argv[])
         free(vec2[i].start_station);
         free(vec2[i].end_station);
     }
+
+    */
 
     freeBikeSharing(bikeSharing, vec1, vec4, vec2, vec3);
 }
