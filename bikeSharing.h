@@ -38,7 +38,7 @@ void addStation(bikeSharingADT bikeSharing, char * station, int id);
 Reserva espacio para la matriz y pone los indices.
 Se debe llamar antes de empezar a cargar los viajes.
 */
-void setMatrix(bikeSharingADT bs);
+int setMatrix(bikeSharingADT bs);
 
 /*Almacena un nuevo viaje. Addtrip deberia cargar el viaje de destino y origen a la matriz*/ 
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear);

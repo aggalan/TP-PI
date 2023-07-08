@@ -10,9 +10,11 @@
 int main(int argc, char *argv[])
 {
     FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
+
+
     char str[MAX_LINE_LENGTH]; // max strg length
     const char s[2] = ";";     // sets the break parameter
-    size_t cantStations = 0;   // counter for the number of stations
+
     errno = 0;
 
     // Checks for errors int he amount of parameters
@@ -80,11 +82,13 @@ int main(int argc, char *argv[])
             token = strtok(NULL, s);
             i++;
         }
-        cantStations++;
+
         addStation(bikeSharing, sName, sId);
     }
 
-    setMatrix(bikeSharing);
+    
+    size_t cantStations = setMatrix(bikeSharing);
+
 
     // When finished loading the stations, we load the trips (reutilizing str)
     // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member

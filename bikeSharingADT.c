@@ -12,7 +12,6 @@
 typedef struct node
 {
     int id;
-    int index;
     int months[MONTHS];
     char * station_name;
     size_t member_trips;
@@ -75,7 +74,7 @@ void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_str
     free(vec4);
 }
 
-static TList addStationRec(TList list, char *station_name, int id)
+static TList addStationRec(TList list, char *station_name, int id, int * flag)
 {
     int c;
     if (list == NULL || (c = strcmp(station_name, list->station_name)) < 0)
@@ -104,12 +103,14 @@ static TList addStationRec(TList list, char *station_name, int id)
         }
 
         new->tail = list;
+
+        (*flag)++;
         return new;
     }
 
     if (c > 0)
     {
-        list->tail = addStationRec(list->tail, station_name, id);
+        list->tail = addStationRec(list->tail, station_name, id, flag);
         return list;
     }
 
@@ -118,13 +119,14 @@ static TList addStationRec(TList list, char *station_name, int id)
 
 void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 {
-    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id);
-    bikeSharing->cant++; // fijarse si no esta agregando de mas
+    int flag = 0;
+    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag);
+    bikeSharing->cant += flag; // fijarse si no esta agregando de mas
 }
 
 // validar los allocs
 
-void setMatrix(bikeSharingADT bs)
+int setMatrix(bikeSharingADT bs)
 {
     bs->matrix_exists = 1; //Avisamos al free que debe liberar la matriz tambien
     // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
@@ -138,8 +140,6 @@ void setMatrix(bikeSharingADT bs)
         return;
     }
 
-    TList aux = bs->first;
-
     for (i = 0; i < bs->cant; i++) // ver si hay que ir hasta cant o cant-1
     {
         bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
@@ -148,11 +148,9 @@ void setMatrix(bikeSharingADT bs)
         {
             return;
         }
-
-        aux->index = i;
-
-        aux = aux->tail;
     }
+
+    return bs->cant;
 }
 
 /* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!*/
@@ -162,19 +160,22 @@ static TList getIndex(TList first, int start_id, int end_id, int * start_index, 
     TList aux = first;
     TList ans = NULL;
 
+    int index = 0;
+
     while (aux != NULL && *flag < 2)
     {
         if (aux->id == start_id) {
-            *start_index = aux->index;
+            *start_index = index;
             ans = aux;
             (*flag)++;
         }
 
         if (aux->id == end_id) {
-            *end_index = aux->index;
+            *end_index = index;
             (*flag)++;
         }
 
+        index++;
 
         aux = aux->tail;
     }
