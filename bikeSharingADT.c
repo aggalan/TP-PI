@@ -11,9 +11,9 @@
 
 typedef struct node
 {
-    size_t id;
+    int id;
     int index;
-    int months[MONTHS];
+    size_t months[MONTHS];
     char * station_name;
     size_t member_trips;
     size_t circular_trips;
@@ -29,7 +29,7 @@ typedef struct bikeSharingCDT
     TList sIter;
     TList eIter;
     size_t cant; // cantidad de estaciones
-    int **matrix;
+    size_t **matrix;
     char matrix_exists;
 
 } bikeSharingCDT;
@@ -156,7 +156,7 @@ void setMatrix(bikeSharingADT bs)
 }
 
 /* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!*/
-static TList getIndex(TList first, size_t start_id, size_t end_id, int * start_index, int * end_index, int *flag) 
+static TList getIndex(TList first, int start_id, int end_id, int * start_index, int * end_index, int *flag) 
 {
 
     TList aux = first;
