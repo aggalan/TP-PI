@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     else if (argc == 4)
     {
         limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;
+        limit_end_year = 3000;    /// guarda esto porque capaz te hace un archivo hasta el 3000 todo vacio
     }
     else if (argc == 5)
     {
@@ -197,8 +197,8 @@ int main(int argc, char *argv[])
 
         fprintf(fp_q2, "%s;", vec2[i].start_station);
         fprintf(fp_q2, "%s;", vec2[i].end_station);
-        fprintf(fp_q2, "%ld;", vec2[i].trips_start_end);
-        fprintf(fp_q2, "%ld\n", vec2[i].trips_end_start);
+        fprintf(fp_q2, "%d;", vec2[i].trips_start_end);
+        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
 
         // QUERY 2 HTML
 
@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
 
         for (int j = 0; j < 12; j++)
         {
-            fprintf(fp_q3, "%ld;", vec3[i].months[j]);
+            fprintf(fp_q3, "%d;", vec3[i].months[j]);
         }
         fprintf(fp_q3, "%s\n", vec3[i].station_name);
 

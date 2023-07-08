@@ -13,7 +13,7 @@ typedef struct node
 {
     int id;
     int index;
-    size_t months[MONTHS];
+    int months[MONTHS];
     char * station_name;
     size_t member_trips;
     size_t circular_trips;
@@ -29,7 +29,7 @@ typedef struct bikeSharingCDT
     TList sIter;
     TList eIter;
     size_t cant; // cantidad de estaciones
-    size_t **matrix;
+    int **matrix;
     char matrix_exists;
 
 } bikeSharingCDT;
@@ -48,7 +48,7 @@ bikeSharingADT newBikeSharing()
     return new;
 }
 
-void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4)
+void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4) // hacer
 {
     TList curr = bs->first, aux;
 
@@ -119,7 +119,7 @@ static TList addStationRec(TList list, char *station_name, int id)
 void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 {
     bikeSharing->first = addStationRec(bikeSharing->first, station_name, id);
-    bikeSharing->cant++;
+    bikeSharing->cant++; // fijarse si no esta agregando de mas
 }
 
 // validar los allocs
@@ -140,7 +140,7 @@ void setMatrix(bikeSharingADT bs)
 
     TList aux = bs->first;
 
-    for (i = 0; i < bs->cant; i++) // como ya esta ordenado alfabeticamente directamente pongo el index
+    for (i = 0; i < bs->cant; i++) // ver si hay que ir hasta cant o cant-1
     {
         bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
 
@@ -276,12 +276,12 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
     {
         return NULL; // preguntar
     }
-    for (int i = 0; i < bikeSharing->cant; i++) // copio todos los station name y los member trips al vector
+    for (int i = 0; i < bikeSharing->cant; i++) // capaz podemos hacer un ciclo while hasta aux == null porque aca se pasa por alguna razon
     {
         switch (query)
         {
         case 1:
-            vec1[i].trips = aux->member_trips;
+            vec1[i].trips = aux->member_trips; // seg fault aca
             break;
         case 4:
             vec1[i].trips = aux->circular_trips;
@@ -319,14 +319,14 @@ q2_struct *q2(bikeSharingADT bikeSharing)
     TList sAux, eAux;
      toBegin(bikeSharing, 1);
 
-    for (int i = 0; i < bikeSharing->cant; i++)
+    for (int i = 0; i < bikeSharing->cant; i++) // revisar este ciclo, aux == null
     {
         toBegin(bikeSharing, 0);
         sAux = next(bikeSharing, 1);
 
         
     
-        for (int j = 0; j < bikeSharing->cant; j++)
+        for (int j = 0; j < bikeSharing->cant; j++) // revisar este ciclo, aux == null
         {
             eAux = next(bikeSharing, 0);
             if (i == j)
@@ -372,7 +372,7 @@ q3_struct *q3(bikeSharingADT bikeSharing)
         return NULL; // preguntar
     }
 
-    for (int i = 0; i < bikeSharing->cant; i++)
+    for (int i = 0; i < bikeSharing->cant; i++) // revisar
     {
         vec3[i].station_name = malloc(strlen(aux->station_name)+1); 
         if (errno == ENOMEM)

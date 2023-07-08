@@ -16,13 +16,13 @@ typedef struct q1_struct {
 typedef struct q2_struct {
     char * start_station;
     char * end_station;
-    size_t trips_start_end;
-    size_t trips_end_start;
+    int trips_start_end; // es una matriz de ints, recibe ints
+    int trips_end_start;
 } q2_struct;
 
 typedef struct q3_struct {
     char * station_name;
-    size_t months[MONTHS];
+    int months[MONTHS];  // esta en ints en el back
 } q3_struct;
 
 /*libera toda memoria reservada por el TAD*/
