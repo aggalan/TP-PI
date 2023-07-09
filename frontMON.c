@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     int sId;
 
     char *token = malloc(MAX_LINE_LENGTH);
+    char * tokenAux = token;
 
     int i = 0;
 
@@ -105,7 +106,7 @@ int main(int argc, char *argv[])
     else if (argc == 4)
     {
         limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;                      /// guarda esto porque capaz te hace un archivo hasta el 3000 todo vacio
+        limit_end_year = 3000;                      
     }
     else if (argc == 5)
     {
@@ -149,6 +150,8 @@ int main(int argc, char *argv[])
             addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
         }
     }
+
+    
 
 
     // CREO LOS VECTORES CON LA INFORMACION PARA LAS 4 QUERYS
@@ -288,7 +291,6 @@ int main(int argc, char *argv[])
 
         addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
 
-        //addHTMLRow(table3, vec3[i].months[0], vec3[i].months[1], vec3[i].months[2], vec3[i].months[3], vec3[i].months[4], vec3[i].months[5], vec3[i].months[6], vec3[i].months[7], vec3[i].months[8], vec3[i].months[9], vec3[i].months[10], vec3[i].months[11], vec3[i].station_name);
 
 
         // QUERY 4 CSV Y HTML
@@ -314,7 +316,10 @@ int main(int argc, char *argv[])
     fclose(fp_trips);
 
 
-   
+
+
+    free(tokenAux);
+    free(sName);
     freeBikeSharing(bikeSharing, vec1, vec4, vec2, vec3);
-    free(token);
+    
 }

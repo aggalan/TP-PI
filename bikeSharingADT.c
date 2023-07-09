@@ -6,7 +6,7 @@
 #include <errno.h>
 #include "bikeSharing.h"
 
-#define MONTHS 12 // fijarse
+#define MONTHS 12 
 
 typedef struct node
 {
@@ -69,13 +69,13 @@ void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_str
     free(bs->matrix);
 
     for (int i = 0; i < bs->cant; i++)
-    { // ver hasta donde se hace el ciclo
+    { 
         free(vec2[i].station_name);
         free(vec1[i].station_name);
         free(vec4[i].station_name);
     }
     for (int i = 0; i < (bs->cant * bs->cant) - bs->cant; i++)
-    { // ver hasta donde se hace el ciclos
+    { 
         free(vec3[i].start_station);
         free(vec3[i].end_station);
     }
@@ -105,7 +105,7 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag)
 
         new->station_name = malloc(strlen(station_name) + 1);
 
-        strcpy(new->station_name, station_name); // chequear si se puede hacer esto
+        strcpy(new->station_name, station_name); 
 
         new->member_trips = 0; // inicializo los viajes de miembros en 0
 
@@ -135,7 +135,7 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 {
     int flag = 0;
     bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag);
-    bikeSharing->cant += flag; // fijarse si no esta agregando de mas
+    bikeSharing->cant += flag; 
 }
 
 // validar los allocs
@@ -154,7 +154,7 @@ void setMatrix(bikeSharingADT bs, int *cant)
         return;
     }
 
-    for (i = 0; i < bs->cant; i++) // ver si hay que ir hasta cant o cant-1
+    for (i = 0; i < bs->cant; i++) 
     {
         bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
 
@@ -199,7 +199,6 @@ static TList getIndex(TList first, int start_id, int end_id, int *start_index, i
     return ans;
 }
 
-// nose si va a hacer falta sort
 
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear)
 {
@@ -295,12 +294,12 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
         return NULL; // preguntar
     }
 
-    for (int i = 0; i < bikeSharing->cant; i++) // capaz podemos hacer un ciclo while hasta aux == null porque aca se pasa por alguna razon
+    for (int i = 0; i < bikeSharing->cant; i++) 
     {
         switch (query)
         {
         case 1:
-            vec1[i].trips = aux->member_trips; // seg fault aca
+            vec1[i].trips = aux->member_trips; 
             break;
         case 4:
             vec1[i].trips = aux->circular_trips;
@@ -337,12 +336,12 @@ q2_struct *q2(bikeSharingADT bikeSharing)
     TList sAux, eAux;
     toBegin(bikeSharing, 1);
 
-    for (int i = 0; i < bikeSharing->cant ; i++) // revisar este ciclo, aux == null -1 PORQUE NO INCLUYE DIAGONAL
+    for (int i = 0; i < bikeSharing->cant ; i++) 
     {
         toBegin(bikeSharing, 0);
         sAux = next(bikeSharing, 1);
 
-        for (int j = 0; j < bikeSharing->cant ; j++) // revisar este ciclo, aux == null  -1 PORQUE NO INCLUYE DIAGONAL
+        for (int j = 0; j < bikeSharing->cant ; j++) 
         {
             eAux = next(bikeSharing, 0);
             if (i == j)
@@ -387,7 +386,7 @@ q3_struct *q3(bikeSharingADT bikeSharing)
         return NULL; // preguntar
     }
 
-    for (int i = 0; i < bikeSharing->cant; i++) // POSIBLE -1
+    for (int i = 0; i < bikeSharing->cant; i++) 
     {
         vec3[i].station_name = malloc(strlen(aux->station_name) + 1);
         if (errno == ENOMEM)
