@@ -314,23 +314,7 @@ int main(int argc, char *argv[])
     fclose(fp_trips);
 
 
-    // esto creo que esta en el back
-
-    /* 
-
-    for (int i = 0; i < cantStations; i++)
-    { // ver hasta donde se hace el ciclo
-        free(vec3[i].station_name);
-        free(vec1[i].station_name);
-        free(vec4[i].station_name);
-    }
-    for (int i = 0; i < (cantStations * cantStations) - cantStations; i++)
-    { // ver hasta donde se hace el ciclos
-        free(vec2[i].start_station);
-        free(vec2[i].end_station);
-    }
-
-    */
-
+   
     freeBikeSharing(bikeSharing, vec1, vec4, vec2, vec3);
+    free(token);
 }

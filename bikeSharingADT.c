@@ -337,12 +337,12 @@ q2_struct *q2(bikeSharingADT bikeSharing)
     TList sAux, eAux;
     toBegin(bikeSharing, 1);
 
-    for (int i = 0; i < bikeSharing->cant - 1; i++) // revisar este ciclo, aux == null -1 PORQUE NO INCLUYE DIAGONAL
+    for (int i = 0; i < bikeSharing->cant ; i++) // revisar este ciclo, aux == null -1 PORQUE NO INCLUYE DIAGONAL
     {
         toBegin(bikeSharing, 0);
         sAux = next(bikeSharing, 1);
 
-        for (int j = 0; j < bikeSharing->cant - 1; j++) // revisar este ciclo, aux == null  -1 PORQUE NO INCLUYE DIAGONAL
+        for (int j = 0; j < bikeSharing->cant ; j++) // revisar este ciclo, aux == null  -1 PORQUE NO INCLUYE DIAGONAL
         {
             eAux = next(bikeSharing, 0);
             if (i == j)
@@ -366,6 +366,7 @@ q2_struct *q2(bikeSharingADT bikeSharing)
 
             strcpy(vec2[k].start_station, sAux->station_name);
             strcpy(vec2[k].end_station, eAux->station_name);
+        
 
             vec2[k].trips_start_end = bikeSharing->matrix[i][j];
             vec2[k].trips_end_start = bikeSharing->matrix[j][i];
