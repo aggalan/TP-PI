@@ -7,6 +7,8 @@
 #define MAX_WORD_LENGTH 30
 #define MAX_LINE_LENGTH 100
 
+enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
+
 int main(int argc, char *argv[])
 {
     FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
@@ -235,6 +237,8 @@ int main(int argc, char *argv[])
      char pasajeN[10];
      char pasajeD[10];
 
+     char * pasajesMonths[MONTHS] = {pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD};
+
 
      // AGREGAMOS LA INFO A LOS QUERYS (PODRIAMOS HACER UN SOLO CICLO Y QUE LOS 1 3 4 SE CORTEN CUANDO I >= CANTSTATIONS CON UN IF)
 
@@ -270,24 +274,12 @@ int main(int argc, char *argv[])
 
         // QUERY 3 CSV Y HTML
 
-         for (int j = 0; j < 12; j++)
+         for (int m = JAN; m <= DEC; m++)
         {
-            fprintf(fp_q3, "%d;", vec3[i].months[j]);
+            sprintf(pasajesMonths[m], "%d", vec3[i].months[m]);
+            fprintf(fp_q3, "%d;", vec3[i].months[m]);
         }
-            fprintf(fp_q3, "%s\n", vec3[i].station_name);
-
-            sprintf(pasajeJ, "%ld",vec1[i].trips );  // podriamos hacer que el q1 directamente haga sprintf al struct y no hacerlos en el front
-            sprintf(pasajeF, "%ld",vec1[i].trips );
-            sprintf(pasajeM, "%ld",vec1[i].trips );
-            sprintf(pasajeA, "%ld",vec1[i].trips );
-            sprintf(pasajeMy, "%ld",vec1[i].trips );
-            sprintf(pasajeJu, "%ld",vec1[i].trips );
-            sprintf(pasajeJl, "%ld",vec1[i].trips );
-            sprintf(pasajeAg, "%ld",vec1[i].trips );
-            sprintf(pasajeS, "%ld",vec1[i].trips );
-            sprintf(pasajeO, "%ld",vec1[i].trips );
-            sprintf(pasajeN, "%ld",vec1[i].trips );
-            sprintf(pasajeD, "%ld",vec1[i].trips );
+        fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
         addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
 
