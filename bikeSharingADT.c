@@ -101,7 +101,7 @@ void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_str
     free(bs);
 }
 
-static TList addStationRec(TList list, char *station_name, int id, int *flag)
+static TList addStationRec(TList list, char *station_name, int id, int *flag, int * memFlag)
 {
     int c;
     if (list == NULL || (c = strcmp(station_name, list->station_name)) < 0)
@@ -111,6 +111,7 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag)
 
         if (errno == ENOMEM)
         {
+            *memFlag = 1;
             return NULL;
         }
 
@@ -137,18 +138,21 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag)
 
     if (c > 0)
     {
-        list->tail = addStationRec(list->tail, station_name, id, flag);
+        list->tail = addStationRec(list->tail, station_name, id, flag, memFlag);
         return list;
     }
 
     return list; // Ya existia esa estacion en la lista
 }
 
-void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
+int addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 {
-    int flag = 0;
-    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag);
+    int flag = 0, memFlag = 0;
+    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag, &memFlag);
     bikeSharing->cant += flag; 
+    if(memFlag)
+        return 1;
+    return 0;
 }
 
 // validar los allocs
@@ -189,7 +193,7 @@ void setArr(bikeSharingADT bs) // CAMBIO
 
 }
 
-void setMatrix(bikeSharingADT bs, int *cant)
+int setMatrix(bikeSharingADT bs, int *cant)
 {
     bs->matrix_exists = 1; // Avisamos al free que debe liberar la matriz tambien
     // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
@@ -202,7 +206,7 @@ void setMatrix(bikeSharingADT bs, int *cant)
 
     if (errno == ENOMEM)
     {
-        return;
+        return 1;
     }
 
     for (i = 0; i < bs->cant; i++) 
@@ -211,11 +215,12 @@ void setMatrix(bikeSharingADT bs, int *cant)
 
         if (errno == ENOMEM)
         {
-            return;
+            return 1;
         }
     }
 
     *cant = bs->cant;
+    return 0;
 }
 
 // An iterative binary search function.
