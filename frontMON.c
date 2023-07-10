@@ -248,20 +248,7 @@ int main(int argc, char *argv[])
      char pasajeString[MAX_NUMBER_LENGTH];
      char pasajeString2[MAX_NUMBER_LENGTH];
 
-     char pasajeJ[MAX_NUMBER_LENGTH];  //Se podrá hacer más fácil con un "char vectorDePasajes[MONTHS][MAX_NUMBER_LENGTH]" ?
-     char pasajeF[MAX_NUMBER_LENGTH];
-     char pasajeM[MAX_NUMBER_LENGTH];
-     char pasajeA[MAX_NUMBER_LENGTH];
-     char pasajeMy[MAX_NUMBER_LENGTH];  
-     char pasajeJu[MAX_NUMBER_LENGTH];
-     char pasajeJl[MAX_NUMBER_LENGTH];
-     char pasajeAg[MAX_NUMBER_LENGTH];
-     char pasajeS[MAX_NUMBER_LENGTH];  
-     char pasajeO[MAX_NUMBER_LENGTH];
-     char pasajeN[MAX_NUMBER_LENGTH];
-     char pasajeD[MAX_NUMBER_LENGTH];
-
-     char * pasajesMonths[MONTHS] = {pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD};
+     char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH];  //Se podrá hacer más fácil con un "char vectorDePasajes[MONTHS][MAX_NUMBER_LENGTH]" ?
 
 
      // AGREGAMOS LA INFO A LOS QUERYS (PODRIAMOS HACER UN SOLO CICLO Y QUE LOS 1 3 4 SE CORTEN CUANDO I >= CANTSTATIONS CON UN IF)
@@ -302,9 +289,7 @@ int main(int argc, char *argv[])
         }
         fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
-        addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
-
-
+        addHTMLRow(table3, pasajesMonths[JAN], pasajesMonths[FEB], pasajesMonths[MAR], pasajesMonths[APR], pasajesMonths[MAY], pasajesMonths[JUN], pasajesMonths[JUL], pasajesMonths[AUG], pasajesMonths[SEP], pasajesMonths[OCT], pasajesMonths[NOV], pasajesMonths[DEC], vec3[i].station_name);
 
         // QUERY 4 CSV Y HTML
 
