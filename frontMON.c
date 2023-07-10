@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 
     // creates variables for stations id and name, coordinates not needed for our querys.
 
-    bikeSharingADT bikeSharing = newBikeSharing();
+    bikeSharingADT bikeSharing = newBikeSharing(limit_start_year, limit_end_year);
 
     MEMORY_CHECK(bikeSharing);
 
@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
             }
             token = strtok(NULL, s);
 
-            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year); // podriamos cambiar para pasar los limits una vez
+            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month); // podriamos cambiar para pasar los limits una vez
         }
     }
 
