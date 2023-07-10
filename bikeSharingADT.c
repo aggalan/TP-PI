@@ -6,11 +6,14 @@
 #include <errno.h>
 #include "bikeSharing.h"
 
-#define MONTHS 12 
+#define MONTHS 12 // fijarse
+
+
 
 typedef struct node
 {
     int id;
+    int index;
     int months[MONTHS];
     char *station_name;
     size_t member_trips;
@@ -21,6 +24,13 @@ typedef struct node
 
 typedef TNode *TList;
 
+typedef struct idSort   // CAMBIO
+{
+    int id;
+    TList station;
+    
+}idSort;
+
 typedef struct bikeSharingCDT
 {
     TList first; // puntero a la primera estacion
@@ -28,7 +38,10 @@ typedef struct bikeSharingCDT
     TList eIter;
     size_t cant; // cantidad de estaciones
     int **matrix;
+    idSort * arr;
     char matrix_exists;
+    int l;
+    int r;
 
 } bikeSharingCDT;
 
@@ -79,7 +92,7 @@ void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_str
         free(vec3[i].start_station);
         free(vec3[i].end_station);
     }
-
+    free(bs->arr);
     free(vec1);
     free(vec2);
     free(vec3);
@@ -140,12 +153,50 @@ void addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 
 // validar los allocs
 
+
+static int idCmp(const void *e1, const void *e2)
+{
+    const idSort *ptr1 = (const idSort *)e1;
+    const idSort *ptr2 = (const idSort *)e2;
+    return (ptr1->id - ptr2->id);
+}
+
+void setArr(bikeSharingADT bs) // CAMBIO
+{
+    errno = 0;
+    bs->arr = malloc(bs->cant * sizeof(idSort));
+
+    if (errno == ENOMEM)
+    {
+        return;
+    }
+
+    TList aux = bs->first;
+
+    for(int i = 0; i < bs->cant; i++)
+    {   
+        aux->index = i;
+        bs->arr[i].id = aux->id;
+        bs->arr[i].station = aux;
+
+        aux = aux->tail;
+    }
+
+    qsort(bs->arr, bs->cant, sizeof(idSort), idCmp);
+
+    bs->l=0;
+    bs->r=bs->cant-1;
+
+}
+
 void setMatrix(bikeSharingADT bs, int *cant)
 {
     bs->matrix_exists = 1; // Avisamos al free que debe liberar la matriz tambien
     // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
     int i;
     errno = 0;
+
+    setArr(bs); //CAMBIO
 
     bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
 
@@ -167,7 +218,34 @@ void setMatrix(bikeSharingADT bs, int *cant)
     *cant = bs->cant;
 }
 
-/* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!*/
+// An iterative binary search function.
+TList binarySearch(idSort * arr, int l, int r, int id)
+{
+    while (l <= r) {
+        
+        int m = l + (r - l) / 2;
+ 
+        // Check if x is present at mid
+        if (arr[m].id == id)
+            return arr[m].station;
+ 
+        // If x greater, ignore left half
+        if (arr[m].id < id)
+            l = m + 1;
+ 
+        // If x is smaller, ignore right half
+        else
+            r = m - 1;
+    }
+ 
+    // If we reach here, then element was not present
+    return NULL;
+}
+ 
+
+
+
+/* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!
 static TList getIndex(TList first, int start_id, int end_id, int *start_index, int *end_index, int *flag)
 {
 
@@ -199,16 +277,21 @@ static TList getIndex(TList first, int start_id, int end_id, int *start_index, i
     return ans;
 }
 
+*/
+
 
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear)
 {
-    int idxStart, idxEnd, flag = 0;
-    TList sAux;
+    TList sAux, eAux;
 
     // Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
-    sAux = getIndex(bikeSharing->first, startId, endId, &idxStart, &idxEnd, &flag);
+     // sAux = getIndex(bikeSharing->first, startId, endId, &idxStart, &idxEnd, &flag);
 
-    if (flag < 2)
+    sAux = binarySearch(bikeSharing->arr, bikeSharing->l, bikeSharing->r, startId);
+
+    eAux = binarySearch(bikeSharing->arr, bikeSharing->l, bikeSharing->r, endId);
+
+    if (sAux == NULL || eAux == NULL)
     {
         return;
     }
@@ -231,7 +314,7 @@ void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, i
     // Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
     else
     {
-        bikeSharing->matrix[idxStart][idxEnd]++;
+        bikeSharing->matrix[sAux->index][eAux->index]++;
     }
 }
 
