@@ -7,6 +7,10 @@
 #define MAX_WORD_LENGTH 30 
 #define MAX_LINE_LENGTH 100 //Para leer una linea de cualquier archivo
 #define MAX_NUMBER_LENGTH 15 //Cantidad de memoria para pasar un int a un char (para los archivos html)
+#define MEMORY_CHECK(ptr) if (ptr == NULL){\
+                            perror("Error, insufficient memory");\
+                            return 1;\
+                          }\
 
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
@@ -31,41 +35,26 @@ int main(int argc, char *argv[])
     fp_stations = fopen(argv[1], "r"); // opens the stations csv file
     fp_trips = fopen(argv[2], "r");
 
-    if (fp_stations == NULL || fp_trips == NULL)
-    {
-        perror("Error opening file");
-        return (-1);
-    }
+    MEMORY_CHECK(fp_stations)
+    MEMORY_CHECK(fp_trips)
 
     // creates variables for stations id and name, coordinates not needed for our querys.
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
-    if (bikeSharing == NULL)
-    {
-        perror("Error allocating memory");
+    MEMORY_CHECK(bikeSharing);
 
-        return 1;
-    }
+    //Declares variables for file reading
 
-    char *sName = malloc(MAX_LINE_LENGTH);
+    char *sName = malloc(MAX_LINE_LENGTH), *token = malloc(MAX_LINE_LENGTH), *tokenAux = token;
+    int sId, cantStations;
 
-    if (errno == ENOMEM)
-    {
-        perror("Not enough memory");
+    MEMORY_CHECK(sName)
+    MEMORY_CHECK(token)
 
-        return 1;
-    }
-
-    int sId;
-
-    char *token = malloc(MAX_LINE_LENGTH);
-    char * tokenAux = token;
+    // Passes each station's data to parameters and send it to backend
 
     int i = 0;
-
-    // pass each station data to parameters and send it to backend
-
 
     fgets(str, sizeof(str), fp_stations); // descarto primera linea;
    
@@ -96,8 +85,6 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-
-    int cantStations;
     
     int memFlag = setMatrix(bikeSharing, &cantStations);
     if(memFlag)
