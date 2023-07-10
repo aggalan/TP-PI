@@ -94,8 +94,7 @@ int main(int argc, char *argv[])
     }
 
 
-    // When finished loading the stations, we load the trips (reutilizing str)
-    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
+    // Loads trips data (reutilizing str)
 
     int start_year, start_month;
     int start_id, end_id;
@@ -121,8 +120,6 @@ int main(int argc, char *argv[])
 
 
     fgets(str, sizeof(str), fp_trips); // descarto la primera linea
-
-    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
 
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
@@ -159,43 +156,27 @@ int main(int argc, char *argv[])
     
 
 
-    // CREO LOS VECTORES CON LA INFORMACION PARA LAS 4 QUERYS
+    // Creates vectors for querys
 
     q1_struct *vec1 = q1(bikeSharing, 1);
 
-    if(vec1 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec1)
 
     q2_struct *vec2 = q2(bikeSharing);
 
-    if(vec2 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec2)
 
     q3_struct *vec3 = q3(bikeSharing);
 
-    if(vec3 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec3)
 
     q1_struct *vec4 = q1(bikeSharing, 4);
 
-    if(vec4 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec4)
 
    
    
-    // CREACION TABLAS PARA LOS 4 QUERYS
+    // Creates tables for html files of all 4 querys
 
     htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
 
@@ -208,8 +189,6 @@ int main(int argc, char *argv[])
     
     
     // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
-
-    //crear un solo string largo
 
     char pasajeString[MAX_NUMBER_LENGTH];
     char pasajeString2[MAX_NUMBER_LENGTH];
