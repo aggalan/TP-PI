@@ -6,6 +6,7 @@
 #include "htmlTable.h"
 #define MAX_WORD_LENGTH 30
 #define MAX_LINE_LENGTH 100
+#define MAX_NUMBER_LENGTH 15
 
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
@@ -25,6 +26,15 @@ int main(int argc, char *argv[])
     {
         perror("Error in the amount of parameters");
         return 1;
+    }
+
+    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
+    fp_trips = fopen(argv[2], "r");
+
+    if (fp_stations == NULL || fp_trips == NULL)
+    {
+        perror("Error opening file");
+        return (-1);
     }
 
     // creates variables for stations id and name, coordinates not needed for our querys.
@@ -55,15 +65,6 @@ int main(int argc, char *argv[])
     int i = 0;
 
     // pass each station data to parameters and send it to backend
-
-    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
-    fp_trips = fopen(argv[2], "r");
-
-    if (fp_stations == NULL)
-    {
-        perror("Error opening file");
-        return (-1);
-    }
 
 
     fgets(str, sizeof(str), fp_stations); // descarto primera linea;
@@ -229,58 +230,29 @@ int main(int argc, char *argv[])
 
 
     fp_q1 = fopen("query1.csv", "w");
-    fprintf(fp_q1, "Station;");
-    fprintf(fp_q1, "StartedTrips\n");
+    fprintf(fp_q1, "Station;StartedTrips\n");
 
 
     fp_q2 = fopen("query2.csv", "w");
-    fprintf(fp_q2, "StationA;");
-    fprintf(fp_q2, "StationB;");
-    fprintf(fp_q2, "Trips A -> B;");
-    fprintf(fp_q2, "Trips B -> A\n");
+    fprintf(fp_q2, "StationA;StationB;Trips A -> B;Trips B -> A\n");
 
 
     fp_q3 = fopen("query3.csv", "w"); 
-    fprintf(fp_q3, "J;");
-    fprintf(fp_q3, "F;");
-    fprintf(fp_q3, "M;");
-    fprintf(fp_q3, "A;");
-    fprintf(fp_q3, "M;");
-    fprintf(fp_q3, "J;");
-    fprintf(fp_q3, "J;");
-    fprintf(fp_q3, "A;");
-    fprintf(fp_q3, "S;");
-    fprintf(fp_q3, "O;");
-    fprintf(fp_q3, "N;");
-    fprintf(fp_q3, "D\n");
+    fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
 
 
     fp_q4 = fopen("query4.csv", "w");
-    fprintf(fp_q4, "Station;");
-    fprintf(fp_q4, "RoundingTrips\n");
+    fprintf(fp_q4, "Station;RoundingTrips\n");
 
 
 
     //creo strings para pasar de int  (capaz podemos hacer uno solo largo)
 
 
-     char pasajeString[15];
-     char pasajeString2[15];
+     char pasajeString[MAX_NUMBER_LENGTH];
+     char pasajeString2[MAX_NUMBER_LENGTH];
 
-     char pasajeJ[10];  
-     char pasajeF[10];
-     char pasajeM[10];
-     char pasajeA[10];
-     char pasajeMy[10];  
-     char pasajeJu[10];
-     char pasajeJl[10];
-     char pasajeAg[10];
-     char pasajeS[10];  
-     char pasajeO[10];
-     char pasajeN[10];
-     char pasajeD[10];
-
-     char * pasajesMonths[MONTHS] = {pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD};
+     char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH];
 
 
      // AGREGAMOS LA INFO A LOS QUERYS (PODRIAMOS HACER UN SOLO CICLO Y QUE LOS 1 3 4 SE CORTEN CUANDO I >= CANTSTATIONS CON UN IF)
@@ -291,15 +263,13 @@ int main(int argc, char *argv[])
 
         // QUERY 2 CSV
 
-        sprintf(pasajeString, "%d",vec2[i].trips_end_start );
-        sprintf(pasajeString2, "%d",vec2[i].trips_start_end );
-
-        fprintf(fp_q2, "%s;", vec2[i].start_station);
-        fprintf(fp_q2, "%s;", vec2[i].end_station);
-        fprintf(fp_q2, "%d;", vec2[i].trips_start_end );
-        fprintf(fp_q2, "%d\n", vec2[i].trips_end_start);
+        fprintf(fp_q2, "%s;%s;%d;%d\n", vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start);
 
         // QUERY 2 HTML
+
+        
+        sprintf(pasajeString, "%d",vec2[i].trips_end_start );
+        sprintf(pasajeString2, "%d",vec2[i].trips_start_end );
 
         addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, pasajeString2, pasajeString);
     }
@@ -309,8 +279,7 @@ int main(int argc, char *argv[])
     { 
         // QUERY 1 CSV Y HTML
 
-        fprintf(fp_q1, "%s;", vec1[i].station_name);
-        fprintf(fp_q1, "%ld\n", vec1[i].trips);
+        fprintf(fp_q1, "%s;%ld\n", vec1[i].station_name, vec1[i].trips);
 
         sprintf(pasajeString2, "%ld",vec1[i].trips );
         addHTMLRow(table1, vec1[i].station_name, pasajeString2);
@@ -324,14 +293,11 @@ int main(int argc, char *argv[])
         }
         fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
-        addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
-
-
+        addHTMLRow(table3, pasajesMonths[JAN], pasajesMonths[FEB], pasajesMonths[MAR], pasajesMonths[APR], pasajesMonths[MAY], pasajesMonths[JUN], pasajesMonths[JUL], pasajesMonths[AUG], pasajesMonths[SEP], pasajesMonths[OCT], pasajesMonths[NOV], pasajesMonths[DEC], vec3[i].station_name);
 
         // QUERY 4 CSV Y HTML
 
-        fprintf(fp_q4, "%s;", vec4[i].station_name);
-        fprintf(fp_q4, "%ld\n", vec4[i].trips);
+        fprintf(fp_q4, "%s;%ld\n", vec4[i].station_name, vec4[i].trips);
 
         sprintf(pasajeString, "%ld",vec4[i].trips );
         addHTMLRow(table4, vec4[i].station_name, pasajeString);
