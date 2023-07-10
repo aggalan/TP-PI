@@ -28,6 +28,15 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
+    fp_trips = fopen(argv[2], "r");
+
+    if (fp_stations == NULL || fp_trips == NULL)
+    {
+        perror("Error opening file");
+        return (-1);
+    }
+
     // creates variables for stations id and name, coordinates not needed for our querys.
 
     bikeSharingADT bikeSharing = newBikeSharing();
@@ -56,15 +65,6 @@ int main(int argc, char *argv[])
     int i = 0;
 
     // pass each station data to parameters and send it to backend
-
-    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
-    fp_trips = fopen(argv[2], "r");
-
-    if (fp_stations == NULL)
-    {
-        perror("Error opening file");
-        return (-1);
-    }
 
 
     fgets(str, sizeof(str), fp_stations); // descarto primera linea;
