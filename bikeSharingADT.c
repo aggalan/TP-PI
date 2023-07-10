@@ -165,14 +165,14 @@ static int idCmp(const void *e1, const void *e2)
     return (ptr1->id - ptr2->id);
 }
 
-void setArr(bikeSharingADT bs) // CAMBIO
+int setArr(bikeSharingADT bs) // CAMBIO
 {
     errno = 0;
     bs->arr = malloc(bs->cant * sizeof(idSort));
 
     if (errno == ENOMEM)
     {
-        return;
+        return 1;
     }
 
     TList aux = bs->first;
@@ -191,6 +191,8 @@ void setArr(bikeSharingADT bs) // CAMBIO
     bs->l=0;
     bs->r=bs->cant-1;
 
+    return 0;
+
 }
 
 int setMatrix(bikeSharingADT bs, int *cant)
@@ -200,8 +202,9 @@ int setMatrix(bikeSharingADT bs, int *cant)
     int i;
     errno = 0;
 
-    setArr(bs); //CAMBIO
-
+    if(setArr(bs))
+        return 1;
+        
     bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
 
     if (errno == ENOMEM)
