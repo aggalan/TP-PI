@@ -29,7 +29,7 @@ typedef struct q3_struct {
 void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4);
 
 /*Retorna un nuevo bikesharing. Al principio esta vacio*/
-bikeSharingADT newBikeSharing();
+bikeSharingADT newBikeSharing(int start_year, int end_year);
 
 /*Almacena una nueva estacion en orden alfabetico el TAD*/
 int addStation(bikeSharingADT bikeSharing, char * station, int id);
@@ -41,7 +41,7 @@ Se debe llamar antes de empezar a cargar los viajes.
 int setMatrix(bikeSharingADT bs, int * cant);
 
 /*Almacena un nuevo viaje. Addtrip deberia cargar el viaje de destino y origen a la matriz*/ 
-void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear);
+void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month);
 
 
 //chequear que devuelven las funciones de query(tiene sentido que devuelva un nuevo vector para podedr imprimir lindo)

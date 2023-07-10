@@ -40,16 +40,20 @@ typedef struct bikeSharingCDT
     int **matrix;
     idSort * arr;
     char matrix_exists;
+    int limit_start_year;
+    int limit_end_year;
     int l;
     int r;
 
 } bikeSharingCDT;
 
-bikeSharingADT newBikeSharing()
+bikeSharingADT newBikeSharing(int start_year, int end_year)
 {
     errno = 0;
 
     bikeSharingADT new = calloc(1, sizeof(bikeSharingCDT));
+    new->limit_start_year = start_year;
+    new->limit_end_year = end_year;
 
     if (errno == ENOMEM)
     {
@@ -288,7 +292,7 @@ static TList getIndex(TList first, int start_id, int end_id, int *start_index, i
 */
 
 
-void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month, int sYear, int eYear)
+void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month)
 {
     TList sAux, eAux;
 
@@ -314,7 +318,7 @@ void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, i
     sAux->months[month - 1]++;
 
     // Agregamos los viajes circulares
-    if (startId == endId && (year >= sYear && year <= eYear))
+    if (startId == endId && (year >= bikeSharing->limit_start_year && year <= bikeSharing->limit_end_year))
     {
         sAux->circular_trips++;
     }
