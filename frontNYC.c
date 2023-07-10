@@ -68,13 +68,13 @@ int main(int argc, char *argv[])
         i = 0;
 
         token = strtok(str, s);
-        while (token != NULL && i < 2)
+        while (token != NULL)
         {
-            if (i == 0)
+            if (i == 3)
             {
                 sId = atoi(token);
             }
-            if (i == 1)
+            if (i == 0)
             {
                 strcpy(sName, token);
             }
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
 
     // When finished loading the stations, we load the trips (reutilizing str)
-    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
+    // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
 
     int start_year, start_month;
     int start_id, end_id;
@@ -119,12 +119,13 @@ int main(int argc, char *argv[])
 
     fgets(str, sizeof(str), fp_trips); // descarto la primera linea
 
-    // start_date;emplacement_pk_start;end_date;emplacement_pk_end;is_member
+    // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
 
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
 
         int i = 0;
+        char member_casual[7] = "casual";
 
         token = strtok(str, s);
         for (i = 0; token != NULL; i++)
@@ -143,9 +144,9 @@ int main(int argc, char *argv[])
             {
                 end_id = atoi(token);
             }
-            if (i == 4)
+            if (i == 5)
             {
-                is_member = atoi(token);
+                is_member = strcmp(member_casual,token);
             }
             token = strtok(NULL, s);
 
