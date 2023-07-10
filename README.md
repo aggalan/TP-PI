@@ -6,7 +6,7 @@ En una primera instancia se debe correr en la terminal el comando 'make' como se
 
 ~$ make
 
-Una que se haya ejecutado el comando, se van a generar los ejecutables bikeSharingMON y bikeSharingNYC en el directorio donde se esta trabajando.
+Una vez que se haya ejecutado el comando, se van a generar los ejecutables bikeSharingMON y bikeSharingNYC en el directorio donde se esta trabajando.
 Lo que realiza este este comando es compilar el programa con los respectivos archivos .c, .h y flags indicados por el archivo "Makefile".
 
 Ahora lo que se debe hacer para correr los ejecutables correr en la terminal los siguientes comandos:
