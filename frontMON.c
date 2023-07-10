@@ -7,6 +7,10 @@
 #define MAX_WORD_LENGTH 30 
 #define MAX_LINE_LENGTH 100 //Para leer una linea de cualquier archivo
 #define MAX_NUMBER_LENGTH 15 //Cantidad de memoria para pasar un int a un char (para los archivos html)
+#define MEMORY_CHECK(ptr) if (ptr == NULL){\
+                            perror("Error, insufficient memory");\
+                            return 1;\
+                          }\
 
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
@@ -28,44 +32,29 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
+    fp_trips = fopen(argv[2], "r");
+
+    MEMORY_CHECK(fp_stations)
+    MEMORY_CHECK(fp_trips)
+
     // creates variables for stations id and name, coordinates not needed for our querys.
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
-    if (bikeSharing == NULL)
-    {
-        perror("Error allocating memory");
+    MEMORY_CHECK(bikeSharing);
 
-        return 1;
-    }
+    //Declares variables for file reading
 
-    char *sName = malloc(MAX_LINE_LENGTH);
+    char *sName = malloc(MAX_LINE_LENGTH), *token = malloc(MAX_LINE_LENGTH), *tokenAux = token;
+    int sId, cantStations;
 
-    if (errno == ENOMEM)
-    {
-        perror("Not enough memory");
+    MEMORY_CHECK(sName)
+    MEMORY_CHECK(token)
 
-        return 1;
-    }
-
-    int sId;
-
-    char *token = malloc(MAX_LINE_LENGTH);
-    char * tokenAux = token;
+    // Passes each station's data to parameters and send it to backend
 
     int i = 0;
-
-    // pass each station data to parameters and send it to backend
-
-    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
-    fp_trips = fopen(argv[2], "r");
-
-    if (fp_stations == NULL)
-    {
-        perror("Error opening file");
-        return (-1);
-    }
-
 
     fgets(str, sizeof(str), fp_stations); // descarto primera linea;
    
@@ -96,8 +85,6 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-
-    int cantStations;
     
     int memFlag = setMatrix(bikeSharing, &cantStations);
     if(memFlag)
@@ -224,48 +211,31 @@ int main(int argc, char *argv[])
 
     //crear un solo string largo
 
+    char pasajeString[MAX_NUMBER_LENGTH];
+    char pasajeString2[MAX_NUMBER_LENGTH];
+
+    char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH]; 
+
 
     fp_q1 = fopen("query1.csv", "w");
     fprintf(fp_q1, "Station;StartedTrips\n");
 
+    for (int i = 0; i < cantStations; i++)
+    { 
+        // QUERY 1 CSV Y HTML
+
+        fprintf(fp_q1, "%s;%ld\n", vec1[i].station_name, vec1[i].trips);
+
+        sprintf(pasajeString2, "%ld",vec1[i].trips );
+        addHTMLRow(table1, vec1[i].station_name, pasajeString2);
+
+    }
+    fclose(fp_q1);
+    closeHTMLTable(table1);
+
 
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;StationB;Trips A -> B;Trips B -> A\n");
-
-
-    fp_q3 = fopen("query3.csv", "w"); 
-    fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
-
-
-    fp_q4 = fopen("query4.csv", "w");
-    fprintf(fp_q4, "Station;RoundingTrips\n");
-
-
-
-    //creo strings para pasar de int  (capaz podemos hacer uno solo largo)
-
-
-     char pasajeString[MAX_NUMBER_LENGTH];
-     char pasajeString2[MAX_NUMBER_LENGTH];
-
-     char pasajeJ[MAX_NUMBER_LENGTH];  //Se podrá hacer más fácil con un "char vectorDePasajes[MONTHS][MAX_NUMBER_LENGTH]" ?
-     char pasajeF[MAX_NUMBER_LENGTH];
-     char pasajeM[MAX_NUMBER_LENGTH];
-     char pasajeA[MAX_NUMBER_LENGTH];
-     char pasajeMy[MAX_NUMBER_LENGTH];  
-     char pasajeJu[MAX_NUMBER_LENGTH];
-     char pasajeJl[MAX_NUMBER_LENGTH];
-     char pasajeAg[MAX_NUMBER_LENGTH];
-     char pasajeS[MAX_NUMBER_LENGTH];  
-     char pasajeO[MAX_NUMBER_LENGTH];
-     char pasajeN[MAX_NUMBER_LENGTH];
-     char pasajeD[MAX_NUMBER_LENGTH];
-
-     char * pasajesMonths[MONTHS] = {pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD};
-
-
-     // AGREGAMOS LA INFO A LOS QUERYS (PODRIAMOS HACER UN SOLO CICLO Y QUE LOS 1 3 4 SE CORTEN CUANDO I >= CANTSTATIONS CON UN IF)
-
 
     for (int i = 0; i < (cantStations * cantStations) - cantStations; i++)  // la longitud de este ciclo esta mal
     { 
@@ -282,16 +252,15 @@ int main(int argc, char *argv[])
 
         addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, pasajeString2, pasajeString);
     }
+    fclose(fp_q2);
+    closeHTMLTable(table2);
 
- 
+    fp_q3 = fopen("query3.csv", "w"); 
+    fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
+
+
     for (int i = 0; i < cantStations; i++)
     { 
-        // QUERY 1 CSV Y HTML
-
-        fprintf(fp_q1, "%s;%ld\n", vec1[i].station_name, vec1[i].trips);
-
-        sprintf(pasajeString2, "%ld",vec1[i].trips );
-        addHTMLRow(table1, vec1[i].station_name, pasajeString2);
 
         // QUERY 3 CSV Y HTML
 
@@ -302,9 +271,18 @@ int main(int argc, char *argv[])
         }
         fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
-        addHTMLRow(table3, pasajeJ, pasajeF, pasajeM, pasajeA, pasajeMy, pasajeJu, pasajeJl, pasajeAg, pasajeS, pasajeO, pasajeN, pasajeD, vec3[i].station_name);
+        addHTMLRow(table3, pasajesMonths[JAN], pasajesMonths[FEB], pasajesMonths[MAR], pasajesMonths[APR], pasajesMonths[MAY], pasajesMonths[JUN], pasajesMonths[JUL], pasajesMonths[AUG], pasajesMonths[SEP], pasajesMonths[OCT], pasajesMonths[NOV], pasajesMonths[DEC], vec3[i].station_name);
+
+    }    
+    fclose(fp_q3);
+    closeHTMLTable(table3);
 
 
+    fp_q4 = fopen("query4.csv", "w");
+    fprintf(fp_q4, "Station;RoundingTrips\n");
+
+    for (int i = 0; i < cantStations; i++)
+    { 
 
         // QUERY 4 CSV Y HTML
 
@@ -314,20 +292,12 @@ int main(int argc, char *argv[])
         addHTMLRow(table4, vec4[i].station_name, pasajeString);
 
     }
-
-    closeHTMLTable(table1);
-    closeHTMLTable(table2);
-    closeHTMLTable(table3);
+    fclose(fp_q4);
     closeHTMLTable(table4);
 
-    fclose(fp_q1);
-    fclose(fp_q2);
-    fclose(fp_q3);
-    fclose(fp_q4);
+
     fclose(fp_stations);
     fclose(fp_trips);
-
-
 
 
     free(tokenAux);
