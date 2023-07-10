@@ -397,8 +397,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
             break;
         }
 
-        int len = strlen(aux->station_name);
-        vec1[i].station_name = malloc(len + 1);
+        vec1[i].station_name = malloc(strlen(aux->station_name) + 1);
         if (errno == ENOMEM)
         {
             return NULL;
