@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
     // Loading process starts
 
-    bikeSharingADT bikeSharing = newBikeSharing();
+    bikeSharingADT bikeSharing = newBikeSharing(limit_start_year, limit_end_year);
 
     MEMORY_CHECK(bikeSharing);
 
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
             }
             token = strtok(NULL, s);
 
-            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
+            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month);
         }
     }
 
