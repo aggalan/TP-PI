@@ -31,6 +31,13 @@ int main(int argc, char *argv[])
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
+    if (bikeSharing == NULL)
+    {
+        perror("Error allocating memory");
+
+        return 1;
+    }
+
     char *sName = malloc(MAX_LINE_LENGTH);
 
     if (errno == ENOMEM)
@@ -82,13 +89,23 @@ int main(int argc, char *argv[])
             i++;
         }
 
-        addStation(bikeSharing, sName, sId);
+        if(addStation(bikeSharing, sName, sId))
+        {
+            perror("Error adding station");
+            return 1;
+        }
     }
 
     
     int cantStations;
     
-    setMatrix(bikeSharing, &cantStations);
+    int memFlag = setMatrix(bikeSharing, &cantStations);
+    if(memFlag)
+    {
+        perror("Error allocating memory");
+        return 1;
+    }
+
 
 
     // When finished loading the stations, we load the trips (reutilizing str)
@@ -159,13 +176,38 @@ int main(int argc, char *argv[])
 
     // CREO LOS VECTORES CON LA INFORMACION PARA LAS 4 QUERYS
 
-    q1_struct *vec1 = q1(bikeSharing, 1);
+     q1_struct *vec1 = q1(bikeSharing, 1);
+
+    if(vec1 == NULL)
+    {
+        perror("Error allocating memory");
+        return 1;
+    }
 
     q2_struct *vec2 = q2(bikeSharing);
 
+    if(vec2 == NULL)
+    {
+        perror("Error allocating memory");
+        return 1;
+    }
+
     q3_struct *vec3 = q3(bikeSharing);
 
+    if(vec3 == NULL)
+    {
+        perror("Error allocating memory");
+        return 1;
+    }
+
     q1_struct *vec4 = q1(bikeSharing, 4);
+
+    if(vec4 == NULL)
+    {
+        perror("Error allocating memory");
+        return 1;
+    }
+
 
    
    
