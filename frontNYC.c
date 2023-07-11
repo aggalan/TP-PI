@@ -169,55 +169,24 @@ int main(int argc, char *argv[])
     free(tokenAux);
     free(sName);
 
-    // Creates vectors with the necessary information for each query
 
-     q1_struct *vec1 = q1(bikeSharing, 1);
-
-    MEMORY_CHECK(vec1)
-
-    q2_struct *vec2 = q2(bikeSharing, &dim);
-
-    MEMORY_CHECK(vec2)
-
-    q3_struct *vec3 = q3(bikeSharing);
-
-    MEMORY_CHECK(vec3)
-
-    q1_struct *vec4 = q1(bikeSharing, 4);
-
-    MEMORY_CHECK(vec4)
-
-
-   
-   
-    // Creates tables for the html files
-
-    htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
-
-    htmlTable table2 = newTable("query2.html", 4, "Station A", "Station B", "Trips A -> B", "Trips B -> A");
-
-    htmlTable table3 = newTable("query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station"); 
-
-    htmlTable table4 = newTable("query4.html", 2, "Station", "RoundingTrips");
-
-    
-    
-    // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
-
-    //crear un solo string largo
-
+    //We need to pass the numbers to a string format
     char pasajeString[MAX_NUMBER_LENGTH];
     char pasajeString2[MAX_NUMBER_LENGTH];
-
     char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH]; 
 
 
+    //QUERY 1
+
+    q1_struct *vec1 = q1(bikeSharing, 1);
+    MEMORY_CHECK(vec1)
+
+    htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
     fp_q1 = fopen("query1.csv", "w");
     fprintf(fp_q1, "Station;StartedTrips\n");
 
     for (int i = 0; i < cantStations; i++)
     { 
-        // QUERY 1 CSV Y HTML
 
         fprintf(fp_q1, "%s;%ld\n", vec1[i].station_name, vec1[i].trips);
 
@@ -225,42 +194,49 @@ int main(int argc, char *argv[])
         addHTMLRow(table1, vec1[i].station_name, pasajeString2);
 
     }
+
     fclose(fp_q1);
     closeHTMLTable(table1);
     freeVec1(bikeSharing, vec1);
 
 
+    //QUERY 2
+
+    q2_struct *vec2 = q2(bikeSharing, &dim);
+    MEMORY_CHECK(vec2)
+
+    htmlTable table2 = newTable("query2.html", 4, "Station A", "Station B", "Trips A -> B", "Trips B -> A");
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;StationB;Trips A -> B;Trips B -> A\n");
 
     for (int i = 0; i < dim; i++)  // la longitud de este ciclo esta mal
     { 
 
-        // QUERY 2 CSV
-
         fprintf(fp_q2, "%s;%s;%d;%d\n", vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start);
-
-        // QUERY 2 HTML
-
         
         sprintf(pasajeString, "%d",vec2[i].trips_end_start );
         sprintf(pasajeString2, "%d",vec2[i].trips_start_end );
 
         addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, pasajeString2, pasajeString);
     }
+
     fclose(fp_q2);
     closeHTMLTable(table2);
     freeVec2(bikeSharing, vec2, dim);
 
 
+    //QUERY 3
+
+    q3_struct *vec3 = q3(bikeSharing);
+    MEMORY_CHECK(vec3)
+
+    htmlTable table3 = newTable("query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
     fp_q3 = fopen("query3.csv", "w"); 
     fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
 
 
     for (int i = 0; i < cantStations; i++)
     { 
-
-        // QUERY 3 CSV Y HTML
 
          for (int m = JAN; m <= DEC; m++)
         {
@@ -277,13 +253,17 @@ int main(int argc, char *argv[])
     freeVec3(bikeSharing, vec3);
 
 
+    //QUERY 4
+
+    q1_struct *vec4 = q1(bikeSharing, 4);
+    MEMORY_CHECK(vec4)
+
+    htmlTable table4 = newTable("query4.html", 2, "Station", "RoundingTrips");
     fp_q4 = fopen("query4.csv", "w");
     fprintf(fp_q4, "Station;RoundingTrips\n");
 
     for (int i = 0; i < cantStations; i++)
     { 
-
-        // QUERY 4 CSV Y HTML
 
         fprintf(fp_q4, "%s;%ld\n", vec4[i].station_name, vec4[i].trips);
 
@@ -291,9 +271,12 @@ int main(int argc, char *argv[])
         addHTMLRow(table4, vec4[i].station_name, pasajeString);
 
     }
+
     fclose(fp_q4);
     closeHTMLTable(table4);
     freeVec1(bikeSharing, vec4);
+
+
 
     fclose(fp_stations);
     fclose(fp_trips);
