@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
             }
             if (i == 5)
             {
-                is_member = !strcmp(member_casual,token);
+                is_member = token[0] == "m";
             }
             token = strtok(NULL, s);
 
