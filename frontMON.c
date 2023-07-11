@@ -112,8 +112,7 @@ int main(int argc, char *argv[])
         }
     }
     
-    int memFlag = setMatrix(bikeSharing, &cantStations);
-    if(memFlag)
+    if(setMatrix(bikeSharing, &cantStations))
     {
         perror("Error allocating memory");
         return 1;
