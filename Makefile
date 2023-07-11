@@ -1,7 +1,7 @@
 COMPILER = gcc
 DEBUG_COMPILER = -g -DDEBUG=1
-OUTPUT_FILE_MON = BikeSharingMON
-OUTPUT_FILE_NYC = BikeSharingNYC
+OUTPUT_FILE_MON = bikeSharingMON
+OUTPUT_FILE_NYC = bikeSharingNYC
 FILES_MON = frontMON.c bikeSharingADT.c htmlTable.c
 FILES_NYC = frontNYC.c bikeSharingADT.c htmlTable.c
 CFLAGS = -Wall -pedantic -std=c99 -lm -fsanitize=address -g
