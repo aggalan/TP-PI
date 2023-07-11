@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     {
 
         int i = 0;
-        char member_casual[7] = "casual";
+        char member_casual[7] = "member";
 
         token = strtok(str, s);
         for (i = 0; token != NULL; i++)
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
             }
             if (i == 5)
             {
-                is_member = strcmp(member_casual,token);
+                is_member = !strcmp(member_casual,token);
             }
             token = strtok(NULL, s);
 
