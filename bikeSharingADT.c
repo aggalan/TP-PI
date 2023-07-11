@@ -177,7 +177,7 @@ static int idCmp(const void *e1, const void *e2)
     return (ptr1->id - ptr2->id);
 }
 
-int setArr(bikeSharingADT bs) // CAMBIO
+int setArr(bikeSharingADT bs) 
 {
     errno = 0;
     bs->arr = malloc(bs->cant * sizeof(idSort));
@@ -362,7 +362,7 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
 {
     errno = 0;
 
-    q2_struct *vec2 = malloc(((bikeSharing->cant * bikeSharing->cant) - (bikeSharing->cant)) * sizeof(q2_struct)); // puede llegar a reservar de mas
+    q2_struct *vec2 = malloc(((bikeSharing->cant * bikeSharing->cant) - (bikeSharing->cant)) * sizeof(q2_struct)); 
     MEMORY_CHECK_NULL(vec2)
 
     int k = 0;
