@@ -39,7 +39,6 @@ typedef struct bikeSharingCDT
     size_t cant; // cantidad de estaciones
     int **matrix;
     idSort * arr;
-    char matrix_exists;
     int limit_start_year;
     int limit_end_year;
     int l;
@@ -75,7 +74,7 @@ void freeBikeSharing(bikeSharingADT bs) // hacer
         curr = aux;
     }
 
-    if (bs->matrix_exists)
+    if (bs->matrix != NULL) //si se reservo memoria
     {
         for (int i = 0; i < bs->cant; i++)
         {
@@ -90,7 +89,8 @@ void freeBikeSharing(bikeSharingADT bs) // hacer
     free(bs);
 }
 
-void freeVec1(bikeSharingADT bs, q1_struct * vec1) {
+void freeVec1(bikeSharingADT bs, q1_struct * vec1) 
+{
     for (int i = 0; i < bs->cant; i++)
     { 
         free(vec1[i].station_name);
@@ -98,7 +98,8 @@ void freeVec1(bikeSharingADT bs, q1_struct * vec1) {
     free(vec1);  
 }
 
-void freeVec2(bikeSharingADT bs, q2_struct * vec2) {
+void freeVec2(bikeSharingADT bs, q2_struct * vec2)
+{
     for (int i = 0; i < (bs->cant * bs->cant) - bs->cant; i++)
     { 
         free(vec2[i].start_station);
@@ -107,7 +108,8 @@ void freeVec2(bikeSharingADT bs, q2_struct * vec2) {
     free(vec2);
 }
 
-void freeVec3(bikeSharingADT bs, q3_struct * vec3) {
+void freeVec3(bikeSharingADT bs, q3_struct * vec3) 
+{
     for (int i = 0; i < bs->cant; i++)
     { 
         free(vec3[i].station_name);
@@ -212,8 +214,6 @@ int setArr(bikeSharingADT bs) // CAMBIO
 
 int setMatrix(bikeSharingADT bs, int *cant)
 {
-    bs->matrix_exists = 1; // Avisamos al free que debe liberar la matriz tambien
-    // una vez que cargue todas las estaciones ya puedo reservar memoria para la matriz y asignarle un index a cada nodo
     int i;
     errno = 0;
 
