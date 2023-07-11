@@ -97,8 +97,6 @@ int main(int argc, char *argv[])
     MEMORY_CHECK(token)
 
 
-    fgets(str, sizeof(str), fp_stations); // discards the first line of the file as it only contains titles.
-   
 
     // Every line of stationsMON.csv is broken-down to variables and the stations information is sent to the backend.
 
