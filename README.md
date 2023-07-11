@@ -54,7 +54,7 @@ make bikeSharingMON
 Aclaración:
 En el caso que los archivos provistos no esten en mismo directorio que los ejecutables, se debera ejecutar el programa de la siguiente forma:
 ```sh
-~$ ./bikeSharingMON path/stationsMON.csv path/bikesMON.csv año_comienzo (opcional) año_fin (opcional)
+./bikeSharingMON path/stationsMON.csv path/bikesMON.csv año_comienzo (opcional) año_fin (opcional)
 ```
 
 
