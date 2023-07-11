@@ -7,6 +7,10 @@
 #define MAX_WORD_LENGTH 30
 #define MAX_LINE_LENGTH 100
 #define MAX_NUMBER_LENGTH 15
+#define MEMORY_CHECK(ptr) if (ptr == NULL){\
+                            perror("Error, insufficient memory");\
+                            return 1;\
+                          }\
 
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
@@ -15,12 +19,12 @@ int main(int argc, char *argv[])
     FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
 
 
-    char str[MAX_LINE_LENGTH]; // max strg length
-    const char s[2] = ";";     // sets the break parameter
+    char str[MAX_LINE_LENGTH]; // For storing one .csv line at a time
+    const char s[2] = ";";     // ";" is the separating character in both files
 
     errno = 0;
 
-    // Checks for errors int he amount of parameters
+    // Checks for errors in of parameters (amount and order)
 
     if (argc > 5 || argc < 3)
     {
@@ -28,46 +32,54 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    fp_stations = fopen(argv[1], "r"); // opens the stations csv file
+    fp_stations = fopen(argv[1], "r"); 
     fp_trips = fopen(argv[2], "r");
 
-    if (fp_stations == NULL || fp_trips == NULL)
+    MEMORY_CHECK(fp_stations) //If the first parameters were years (wrong order), this will abort
+    MEMORY_CHECK(fp_trips)
+
+    int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
+
+    if (argc < 4)
     {
-        perror("Error opening file");
-        return (-1);
+        limit_start_year = -1;
+        limit_end_year = 3000;
+    }
+    else if (argc == 4)
+    {
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = 3000;                      
+    }
+    else if (argc == 5)
+    {
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = atoi(argv[4]);
+
+        if (limit_end_year < limit_start_year) {
+            perror("Invalid range of parameters");
+            return 1;
+        }
     }
 
-    // creates variables for stations id and name, coordinates not needed for our querys.
+    // Loading process starts
 
     bikeSharingADT bikeSharing = newBikeSharing();
 
-    if (bikeSharing == NULL)
-    {
-        perror("Error allocating memory");
+    MEMORY_CHECK(bikeSharing);
 
-        return 1;
-    }
+    //Declares variables for file reading
 
-    char *sName = malloc(MAX_LINE_LENGTH);
-
-    if (errno == ENOMEM)
-    {
-        perror("Not enough memory");
-
-        return 1;
-    }
-
-    int sId;
-
-    char *token = malloc(MAX_LINE_LENGTH);
-    char * tokenAux = token;
-
+    char *sName = malloc(MAX_LINE_LENGTH), *token = malloc(MAX_LINE_LENGTH), *tokenAux = token;
+    int sId, cantStations;
     int i = 0;
 
-    // pass each station data to parameters and send it to backend
+    MEMORY_CHECK(sName)
+    MEMORY_CHECK(token)
 
 
-    fgets(str, sizeof(str), fp_stations); // descarto primera linea;
+    //Passes each station data to parameters and sends it to the backend
+
+    fgets(str, sizeof(str), fp_stations); // First line of stations.csv is non important
    
 
     while (fgets(str, sizeof(str), fp_stations) != NULL)
@@ -109,35 +121,10 @@ int main(int argc, char *argv[])
 
 
 
-    // When finished loading the stations, we load the trips (reutilizing str)
-    // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
-
-    int start_year, start_month;
-    int start_id, end_id;
-    int is_member;
-
-    int limit_start_year, limit_end_year;
-
-    if (argc < 4)
-    {
-        limit_start_year = -1;
-        limit_end_year = 3000;
-    }
-    else if (argc == 4)
-    {
-        limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;                      
-    }
-    else if (argc == 5)
-    {
-        limit_start_year = atoi(argv[3]);
-        limit_end_year = atoi(argv[4]);
-    }
+    // Passes each trip data to parameters and sends it to the backend (reutilizing str)
 
 
-    fgets(str, sizeof(str), fp_trips); // descarto la primera linea
-
-    // started_at;start_station_id;ended_at;end_station_id;rideable_type;member_casual
+    fgets(str, sizeof(str), fp_trips); // First line of bikes.csv is also non important
 
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
@@ -175,44 +162,28 @@ int main(int argc, char *argv[])
     
 
 
-    // CREO LOS VECTORES CON LA INFORMACION PARA LAS 4 QUERYS
+    // Creates vectors with the necessary information for each query
 
      q1_struct *vec1 = q1(bikeSharing, 1);
 
-    if(vec1 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec1)
 
     q2_struct *vec2 = q2(bikeSharing);
 
-    if(vec2 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec2)
 
     q3_struct *vec3 = q3(bikeSharing);
 
-    if(vec3 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec3)
 
     q1_struct *vec4 = q1(bikeSharing, 4);
 
-    if(vec4 == NULL)
-    {
-        perror("Error allocating memory");
-        return 1;
-    }
+    MEMORY_CHECK(vec4)
 
 
    
    
-    // CREACION TABLAS PARA LOS 4 QUERYS
+    // Creates tables for the html files
 
     htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
 
@@ -227,11 +198,6 @@ int main(int argc, char *argv[])
     // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
 
     //crear un solo string largo
-
-    char pasajeString[MAX_NUMBER_LENGTH];
-    char pasajeString2[MAX_NUMBER_LENGTH];
-
-    char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH]; 
 
 
     fp_q1 = fopen("query1.csv", "w");
