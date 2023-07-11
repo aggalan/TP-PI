@@ -197,7 +197,10 @@ int main(int argc, char *argv[])
     
     // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
 
-    //crear un solo string largo
+    char pasajeString[MAX_NUMBER_LENGTH];
+    char pasajeString2[MAX_NUMBER_LENGTH];
+
+    char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH]; 
 
 
     fp_q1 = fopen("query1.csv", "w");
