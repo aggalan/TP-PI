@@ -155,8 +155,9 @@ int main(int argc, char *argv[])
             }
             token = strtok(NULL, s);
 
-            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month);
         }
+
+         addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month);
     }
 
     free(tokenAux);
