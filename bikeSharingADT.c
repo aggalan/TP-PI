@@ -445,6 +445,13 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
     }
 
     *dim = k;
+    vec2 = realloc(vec2, k * sizeof(q2_struct));
+
+    if (errno == ENOMEM)
+    {
+        return NULL;
+    }
+
     return vec2;
 }
 
