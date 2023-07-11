@@ -7,7 +7,13 @@
 #include "bikeSharing.h"
 
 #define MONTHS 12 // fijarse
+#define MEMORY_CHECK_NULL(ptr) if (ptr == NULL) {\
+                                      return NULL;\
+                                  }\
 
+#define MEMORY_CHECK_1(ptr) if (ptr == NULL) {\
+                                      return 1;\
+                                  }\
 
 
 typedef struct node
@@ -51,13 +57,10 @@ bikeSharingADT newBikeSharing(int start_year, int end_year)
     errno = 0;
 
     bikeSharingADT new = calloc(1, sizeof(bikeSharingCDT));
+    MEMORY_CHECK_NULL(new)
+
     new->limit_start_year = start_year;
     new->limit_end_year = end_year;
-
-    if (errno == ENOMEM || new == NULL)
-    {
-        return NULL;
-    }
 
     return new;
 }
@@ -133,15 +136,10 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag, in
         }
 
         new->id = id;
-
         new->station_name = malloc(strlen(station_name) + 1);
-
         strcpy(new->station_name, station_name); 
-
         new->member_trips = 0; // inicializo los viajes de miembros en 0
-
         new->circular_trips = 0; // inicializo los viajes circulares
-
         for (int i = 0; i < MONTHS; i++)
         {
             new->months[i] = 0; // inicializo los viajes del mes en 0
@@ -167,12 +165,8 @@ int addStation(bikeSharingADT bikeSharing, char *station_name, int id)
     int flag = 0, memFlag = 0;
     bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag, &memFlag);
     bikeSharing->cant += flag; 
-    if(memFlag)
-        return 1;
-    return 0;
+    return memFlag;
 }
-
-// validar los allocs
 
 
 static int idCmp(const void *e1, const void *e2)
@@ -186,11 +180,7 @@ int setArr(bikeSharingADT bs) // CAMBIO
 {
     errno = 0;
     bs->arr = malloc(bs->cant * sizeof(idSort));
-
-    if (errno == ENOMEM || bs->arr == NULL)
-    {
-        return 1;
-    }
+    MEMORY_CHECK_1(bs->arr)
 
     TList aux = bs->first;
 
@@ -221,23 +211,12 @@ int setMatrix(bikeSharingADT bs, int *cant)
         return 1;
         
     bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
-
-    if (errno == ENOMEM || bs->matrix == NULL)
-    {
-        return 1;
-    }
+    MEMORY_CHECK_1(bs->matrix)
 
     for (i = 0; i < bs->cant; i++) 
     {
         bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
-
-        if (errno == ENOMEM || bs->matrix[i] == NULL)
-        {
-            return 1;
-        }
-        {
-            return 1;
-        }
+        MEMORY_CHECK_1(bs->matrix[i])
     }
 
     *cant = bs->cant;
@@ -361,11 +340,8 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
     errno = 0;
 
     q1_struct *vec1 = malloc(bikeSharing->cant * sizeof(q1_struct));
+    MEMORY_CHECK_NULL(vec1)
 
-    if (errno == ENOMEM || vec1 == NULL)
-    {
-        return NULL; // preguntar
-    }
 
     for (int i = 0; i < bikeSharing->cant; i++) 
     {
@@ -380,10 +356,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
         }
 
         vec1[i].station_name = malloc(strlen(aux->station_name) + 1);
-        if (errno == ENOMEM || vec1[i].station_name == NULL)
-        {
-            return NULL;
-        }
+        MEMORY_CHECK_NULL(vec1[i].station_name)
         strcpy(vec1[i].station_name, aux->station_name);
         aux = aux->tail;
     }
@@ -398,10 +371,7 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
     errno = 0;
 
     q2_struct *vec2 = malloc(((bikeSharing->cant * bikeSharing->cant) - (bikeSharing->cant)) * sizeof(q2_struct)); // puede llegar a reservar de mas
-    if (errno == ENOMEM || vec2 == NULL)
-    {
-        return NULL;
-    }
+    MEMORY_CHECK_NULL(vec2)
 
     int k = 0;
 
@@ -423,18 +393,10 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
             }
 
             vec2[k].start_station = malloc(strlen(sAux->station_name) + 1);
-
-            if (errno == ENOMEM || vec2[k].start_station == NULL)
-            {
-                return NULL;
-            }
+            MEMORY_CHECK_NULL(vec2[k].start_station)
 
             vec2[k].end_station = malloc(strlen(eAux->station_name) + 1);
-
-            if (errno == ENOMEM || vec2[k].end_station == NULL)
-            {
-                return NULL;
-            }
+            MEMORY_CHECK_NULL(vec2[k].end_station)
 
             strcpy(vec2[k].start_station, sAux->station_name);
             strcpy(vec2[k].end_station, eAux->station_name);
@@ -449,11 +411,7 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
 
     *dim = k;
     vec2 = realloc(vec2, k * sizeof(q2_struct));
-
-    if (errno == ENOMEM || vec2 == NULL)
-    {
-        return NULL;
-    }
+    MEMORY_CHECK_NULL(vec2) //Hace falta? En todo caso estamos reduciendo el bloque de memoria utilizada
 
     return vec2;
 }
@@ -463,23 +421,18 @@ q3_struct *q3(bikeSharingADT bikeSharing)
     TList aux = bikeSharing->first;
     errno = 0;
     q3_struct *vec3 = malloc(bikeSharing->cant * sizeof(q3_struct));
-    if (errno == ENOMEM || vec3 == NULL)
-    {
-        return NULL; // preguntar
-    }
+    MEMORY_CHECK_NULL(vec3)
 
     for (int i = 0; i < bikeSharing->cant; i++) 
     {
         vec3[i].station_name = malloc(strlen(aux->station_name) + 1);
-        if (errno == ENOMEM || vec3[i].station_name == NULL)
-        {
-            return NULL; // preguntar
-        }
+        MEMORY_CHECK_NULL(vec3[i].station_name)
         strcpy(vec3[i].station_name, aux->station_name);
         for (int j = 0; j < MONTHS; j++)
         {
             vec3[i].months[j] = aux->months[j];
         }
+        
         aux = aux->tail;
     }
 
