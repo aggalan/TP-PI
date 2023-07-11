@@ -159,8 +159,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    
-
+    free(tokenAux);
+    free(sName);
 
     // Creates vectors with the necessary information for each query
 
@@ -286,8 +286,6 @@ int main(int argc, char *argv[])
     fclose(fp_trips);
 
 
-    free(tokenAux);
-    free(sName);
     freeBikeSharing(bikeSharing, vec1, vec4, vec2, vec3);
     
 }
