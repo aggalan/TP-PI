@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     //Declares variables for file reading
 
     char *sName = malloc(MAX_LINE_LENGTH), *token = malloc(MAX_LINE_LENGTH), *tokenAux = token;
-    int sId, cantStations;
+    int sId, cantStations, dim;
     int i = 0;
 
     MEMORY_CHECK(sName)
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 
     MEMORY_CHECK(vec1)
 
-    q2_struct *vec2 = q2(bikeSharing);
+    q2_struct *vec2 = q2(bikeSharing, &dim);
 
     MEMORY_CHECK(vec2)
 
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
     fp_q2 = fopen("query2.csv", "w");
     fprintf(fp_q2, "StationA;StationB;Trips A -> B;Trips B -> A\n");
 
-    for (int i = 0; i < (cantStations * cantStations) - cantStations; i++)  // la longitud de este ciclo esta mal
+    for (int i = 0; i < dim; i++)  // la longitud de este ciclo esta mal
     { 
 
         // QUERY 2 CSV
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     }
     fclose(fp_q2);
     closeHTMLTable(table2);
-    freeVec2(bikeSharing, vec2);
+    freeVec2(bikeSharing, vec2, dim);
 
 
     fp_q3 = fopen("query3.csv", "w"); 

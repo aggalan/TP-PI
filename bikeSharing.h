@@ -32,7 +32,7 @@ void freeBikeSharing(bikeSharingADT bs);
 void freeVec1(bikeSharingADT bs, q1_struct * vec1);
 
 // libera el vector generado por la query 2
-void freeVec2(bikeSharingADT bs, q2_struct * vec2);
+void freeVec2(bikeSharingADT bs, q2_struct * vec2, int dim);
 
 // libera el vector generado por la query 3
 void freeVec3(bikeSharingADT bs, q3_struct * vec3);
@@ -69,7 +69,7 @@ q1_struct * q1(bikeSharingADT bikeSharing, int query);
     Va a la matriz y obtiene los valores ij y ji. ignora i = j. llama a getdata y va a los indices solicitados. 
     Retorna un struct del estilo q2_struct.
 */
-q2_struct * q2(bikeSharingADT bikeSharing); 
+q2_struct * q2(bikeSharingADT bikeSharing, int * dim); 
  
  /* 
     Recorre el IdArray, va al vector de los viajes de los meses y saca la info ( ya esta ordenado alfabeticamente).

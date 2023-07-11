@@ -98,9 +98,9 @@ void freeVec1(bikeSharingADT bs, q1_struct * vec1)
     free(vec1);  
 }
 
-void freeVec2(bikeSharingADT bs, q2_struct * vec2)
+void freeVec2(bikeSharingADT bs, q2_struct * vec2, int dim)
 {
-    for (int i = 0; i < (bs->cant * bs->cant) - bs->cant; i++)
+    for (int i = 0; i < dim; i++)
     { 
         free(vec2[i].start_station);
         free(vec2[i].end_station);
@@ -267,42 +267,6 @@ TList binarySearch(idSort * arr, int l, int r, int id)
  
 
 
-
-/* Retorna el nodo de la estacion de salida. Deja en start_index y end_index los indices, o no los toca si los id's no estaban. flag debe ser = 0 al pasarlo a la funcion!
-static TList getIndex(TList first, int start_id, int end_id, int *start_index, int *end_index, int *flag)
-{
-
-    TList aux = first;
-    TList ans = NULL;
-
-    int index = 0;
-
-    while (aux != NULL && *flag < 2)
-    {
-        if (aux->id == start_id)
-        {
-            *start_index = index;
-            ans = aux;
-            (*flag)++;
-        }
-
-        if (aux->id == end_id)
-        {
-            *end_index = index;
-            (*flag)++;
-        }
-
-        index++;
-
-        aux = aux->tail;
-    }
-
-    return ans;
-}
-
-*/
-
-
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month)
 {
     TList sAux, eAux;
@@ -426,7 +390,7 @@ q1_struct *q1(bikeSharingADT bikeSharing, int query)
     return vec1;
 }
 
-q2_struct *q2(bikeSharingADT bikeSharing)
+q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
 {
     errno = 0;
 
@@ -449,7 +413,8 @@ q2_struct *q2(bikeSharingADT bikeSharing)
         for (int j = 0; j < bikeSharing->cant ; j++) 
         {
             eAux = next(bikeSharing, 0);
-            if (i == j)
+
+            if ((i == j) || (bikeSharing->matrix[i][j] == 0 && bikeSharing->matrix[j][i] == 0))
             {
                 continue;
             }
@@ -478,6 +443,8 @@ q2_struct *q2(bikeSharingADT bikeSharing)
             k++;
         }
     }
+
+    *dim = k;
     return vec2;
 }
 
