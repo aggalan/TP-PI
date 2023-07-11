@@ -26,7 +26,16 @@ typedef struct q3_struct {
 } q3_struct;
 
 /*libera toda memoria reservada por el TAD*/
-void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4);
+void freeBikeSharing(bikeSharingADT bs);
+
+// libera el vector generado por la query 1
+void freeVec1(bikeSharingADT bs, q1_struct * vec1);
+
+// libera el vector generado por la query 2
+void freeVec2(bikeSharingADT bs, q2_struct * vec2);
+
+// libera el vector generado por la query 3
+void freeVec3(bikeSharingADT bs, q3_struct * vec3);
 
 /*Retorna un nuevo bikesharing. Al principio esta vacio*/
 bikeSharingADT newBikeSharing(int start_year, int end_year);

@@ -194,6 +194,8 @@ int main(int argc, char *argv[])
     
     // APERTURA ARCHIVOS CSV Y PONEMOS LOS TITULOS DE LOS QUERYS
 
+    //crear un solo string largo
+
     char pasajeString[MAX_NUMBER_LENGTH];
     char pasajeString2[MAX_NUMBER_LENGTH];
 
@@ -215,6 +217,9 @@ int main(int argc, char *argv[])
     }
     fclose(fp_q1);
     closeHTMLTable(table1);
+    freeVec1(bikeSharing, vec1);
+
+    printf("q1 files created\n");
 
 
     fp_q2 = fopen("query2.csv", "w");
@@ -237,6 +242,9 @@ int main(int argc, char *argv[])
     }
     fclose(fp_q2);
     closeHTMLTable(table2);
+    freeVec2(bikeSharing, vec2);
+
+    printf("q2 files created\n");
 
     fp_q3 = fopen("query3.csv", "w"); 
     fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
@@ -259,6 +267,9 @@ int main(int argc, char *argv[])
     }    
     fclose(fp_q3);
     closeHTMLTable(table3);
+    freeVec3(bikeSharing, vec3);
+
+    printf("q3 files created\n");
 
 
     fp_q4 = fopen("query4.csv", "w");
@@ -277,6 +288,9 @@ int main(int argc, char *argv[])
     }
     fclose(fp_q4);
     closeHTMLTable(table4);
+    freeVec1(bikeSharing, vec4);
+
+    printf("q4 files created\n");
 
 
     fclose(fp_stations);
@@ -285,6 +299,6 @@ int main(int argc, char *argv[])
 
     free(tokenAux);
     free(sName);
-    freeBikeSharing(bikeSharing, vec1, vec4, vec2, vec3);
+    freeBikeSharing(bikeSharing);
     
 }

@@ -63,7 +63,7 @@ bikeSharingADT newBikeSharing(int start_year, int end_year)
     return new;
 }
 
-void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_struct *vec3, q3_struct *vec4) // hacer
+void freeBikeSharing(bikeSharingADT bs) // hacer
 {
     TList curr = bs->first, aux;
 
@@ -85,25 +85,36 @@ void freeBikeSharing(bikeSharingADT bs, q1_struct *vec1, q1_struct *vec2, q2_str
 
     free(bs->matrix);
 
-    for (int i = 0; i < bs->cant; i++)
-    { 
-        free(vec2[i].station_name);
-        free(vec1[i].station_name);
-        free(vec4[i].station_name);
-    }
-    for (int i = 0; i < (bs->cant * bs->cant) - bs->cant; i++)
-    { 
-        free(vec3[i].start_station);
-        free(vec3[i].end_station);
-    }
     free(bs->arr);
-    free(vec1);
-    free(vec2);
-    free(vec3);
-    free(vec4);
 
     free(bs);
 }
+
+void freeVec1(bikeSharingADT bs, q1_struct * vec1) {
+    for (int i = 0; i < bs->cant; i++)
+    { 
+        free(vec1[i].station_name);
+    }
+    free(vec1);  
+}
+
+void freeVec2(bikeSharingADT bs, q2_struct * vec2) {
+    for (int i = 0; i < (bs->cant * bs->cant) - bs->cant; i++)
+    { 
+        free(vec2[i].start_station);
+        free(vec2[i].end_station);
+    }
+    free(vec2);
+}
+
+void freeVec3(bikeSharingADT bs, q3_struct * vec3) {
+    for (int i = 0; i < bs->cant; i++)
+    { 
+        free(vec3[i].station_name);
+    }  
+    free(vec3);
+}
+
 
 static TList addStationRec(TList list, char *station_name, int id, int *flag, int * memFlag)
 {
