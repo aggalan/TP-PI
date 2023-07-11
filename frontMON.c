@@ -38,6 +38,32 @@ int main(int argc, char *argv[])
     MEMORY_CHECK(fp_stations)
     MEMORY_CHECK(fp_trips)
 
+    
+    int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
+
+
+    if (argc < 4)
+    {
+        limit_start_year = -1;
+        limit_end_year = 3000;
+    }
+    else if (argc == 4)
+    {
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = 3000;                      
+    }
+    else if (argc == 5)
+    {
+        limit_start_year = atoi(argv[3]);
+        limit_end_year = atoi(argv[4]);
+
+        if(limit_end_year < limit_start_year)
+        {
+            perror("Invalid range of years");
+            return(1);
+        }
+    }
+
     // creates variables for stations id and name, coordinates not needed for our querys.
 
     bikeSharingADT bikeSharing = newBikeSharing();
@@ -96,28 +122,6 @@ int main(int argc, char *argv[])
 
     // Loads trips data (reutilizing str)
 
-    int start_year, start_month;
-    int start_id, end_id;
-    int is_member;
-
-    int limit_start_year, limit_end_year;
-
-    if (argc < 4)
-    {
-        limit_start_year = -1;
-        limit_end_year = 3000;
-    }
-    else if (argc == 4)
-    {
-        limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;                      
-    }
-    else if (argc == 5)
-    {
-        limit_start_year = atoi(argv[3]);
-        limit_end_year = atoi(argv[4]);
-    }
-
 
     fgets(str, sizeof(str), fp_trips); // descarto la primera linea
 
@@ -149,7 +153,7 @@ int main(int argc, char *argv[])
             }
             token = strtok(NULL, s);
 
-            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year);
+            addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month, limit_start_year, limit_end_year); // podriamos cambiar para pasar los limits una vez
         }
     }
 
