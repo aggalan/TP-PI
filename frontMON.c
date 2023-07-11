@@ -67,6 +67,15 @@ int main(int argc, char *argv[])
             return(1);
         }
     }
+    
+    fgets(str, sizeof(str), fp_stations); // descarto primera linea y la uso para chequear orden de parametros;
+
+    if(str[0] != 's')
+    {
+        perror("Error in order of .csv files");
+        return 1;
+    }
+
 
     // creates variables for stations id and name, coordinates not needed for our querys.
 
@@ -84,10 +93,7 @@ int main(int argc, char *argv[])
 
     // Passes each station's data to parameters and send it to backend
 
-    int i = 0;
-
-    fgets(str, sizeof(str), fp_stations); // descarto primera linea;
-   
+    int i = 0;   
 
     while (fgets(str, sizeof(str), fp_stations) != NULL)
     {

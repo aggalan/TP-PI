@@ -64,6 +64,14 @@ int main(int argc, char *argv[])
         }
     }
 
+    fgets(str, sizeof(str), fp_stations); // descarto primera linea y la uso para chequear orden de paramtros;
+
+    if(str[3] != 't')
+    {
+        perror("Error in order of .csv files");
+        return 1;
+    }
+
     // Loading process starts
 
     bikeSharingADT bikeSharing = newBikeSharing(limit_start_year, limit_end_year);
