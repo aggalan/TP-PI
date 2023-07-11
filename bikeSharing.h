@@ -25,7 +25,7 @@ typedef struct q3_struct {
     int months[MONTHS]; 
 } q3_struct;
 
-/*Frees up the resourdces used by the ADT*/
+/*Frees up the resources used by the ADT*/
 void freeBikeSharing(bikeSharingADT bs);
 
 // Frees up the resources used by a q1_struct style array
@@ -58,23 +58,19 @@ void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, i
 
 /* 
 Creates a new array that is the same as Idarray and sorts it in descending order (without id).
-Returns a vector of structs of the style:
-struct q1_struct {
-    char * station_name;
-    size_t trips;
-   }
+Returns a vector of structs of the style of q1_struct:
 */
 q1_struct * q1(bikeSharingADT bikeSharing, int query); 
 
 /* 
-    Acceses the matrix and gets the ij and ji values. Ignores i = j. Calls getdata and goes to the requested indexes.
-    returns a struct of the style q2_struct.
+Acceses the matrix and gets the ij and ji values. Ignores i = j. Calls getdata and goes to the requested indexes.
+Returns a struct of the style q2_struct.
 */
 q2_struct * q2(bikeSharingADT bikeSharing, int * dim); 
  
  /* 
-    Gets the information out of the monthly travel array, by first looking up the id in the idArray
-    Returns and array of structs of the style q3_struct.
+Gets the information out of the monthly travel array, by first looking up the id in the idArray
+Returns and array of structs of the style q3_struct.
  */
 q3_struct * q3(bikeSharingADT bikeSharing);
 
