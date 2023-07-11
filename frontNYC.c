@@ -32,11 +32,14 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    fp_stations = fopen(argv[1], "r"); 
-    fp_trips = fopen(argv[2], "r");
+    fp_trips = fopen(argv[1], "r");
+    fp_stations = fopen(argv[2], "r"); 
 
-    MEMORY_CHECK(fp_stations) //If the first parameters were years (wrong order), this will abort
-    MEMORY_CHECK(fp_trips)
+    if(fp_stations == NULL || fp_trips == NULL)
+    {
+        perror("Error opening file");
+        return 1;
+    }
 
     int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
 
