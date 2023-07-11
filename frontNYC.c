@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
 
 
-    if (argc < 4)  //if true, no year restriction is required
+    if (argc < 4)  //if true, no year restriction is required so limits are set so that every year is valid
     {
         limit_start_year = -1;
         limit_end_year = 3000;
@@ -77,7 +77,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-
     // Loading process starts
 
     bikeSharingADT bikeSharing = newBikeSharing(limit_start_year, limit_end_year);
@@ -92,7 +91,7 @@ int main(int argc, char *argv[])
 
 
 
-    // Every line of stationsMON.csv is broken-down to variables and the stations information is sent to the backend.
+    // Every line of stationsNYC.csv is broken-down to variables and the stations information is sent to the backend.
 
 
     while (fgets(str, sizeof(str), fp_stations) != NULL)
@@ -171,7 +170,7 @@ int main(int argc, char *argv[])
          addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month);
     }
 
-    //Frees the resourses used to break-down the information from the .csv files
+    //Frees the resources used to break-down the information from the .csv files
 
     free(tokenAux);
     free(sName);
