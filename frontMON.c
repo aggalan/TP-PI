@@ -9,10 +9,11 @@
 #define MAX_NUMBER_LENGTH 15 
 #define MEMORY_CHECK(ptr) if (ptr == NULL){\
                             perror("Error, insufficient memory");\
-                            return 1;\
+                            return NO_MEMORY;\
                           }\
 
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
+enum status {OK=0,FILE_NOT_FOUND, NO_MEMORY, INCORRECT_AMOUNT_OF_PARAMETERS, INVALID_RANGE_YEARS, INCORRECT_FILE};
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
     if (argc > 5 || argc < 3) // if true, either the user dindn´t run the executable with both .csv files or exceeded the maximum amount of parameters
     {
         perror("Error in the amount of parameters");
-        return 1;
+        return INCORRECT_AMOUNT_OF_PARAMETERS;
     }
 
     fp_trips = fopen(argv[1], "r");
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
     if(fp_stations == NULL || fp_trips == NULL) // if true, one or both files can´t be read
     {
         perror("Error opening file");
-        return 1;
+        return FILE_NOT_FOUND;
     }
 
     
@@ -63,7 +64,7 @@ int main(int argc, char *argv[])
         if(limit_end_year < limit_start_year)
         {
             perror("Invalid range of years");
-            return(1);
+            return INVALID_RANGE_YEARS;
         }
     }
     
@@ -71,7 +72,7 @@ int main(int argc, char *argv[])
     if(str[0] != 's')
     {
         perror("Error in order of .csv files");
-        return 1;
+        return INCORRECT_FILE;
     }
 
       // Loading process starts
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
         if(addStation(bikeSharing, sName, sId))
         {
             perror("Error adding station");
-            return 1;
+            return NO_MEMORY;
         }
     }
     
@@ -123,7 +124,7 @@ int main(int argc, char *argv[])
     if(setMatrix(bikeSharing, &cantStations))
     {
         perror("Error allocating memory");
-        return 1;
+        return NO_MEMORY;
     }
 
     fgets(str, sizeof(str), fp_trips); // discards the first line of the file as it only contains titles.
