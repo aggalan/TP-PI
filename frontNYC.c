@@ -148,7 +148,7 @@ int main(int argc, char *argv[])
             }
             if (i == 5)
             {
-                is_member = token[0] == "m";
+                is_member = token[0] == 'm';
             }
             token = strtok(NULL, s);
 
