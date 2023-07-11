@@ -128,7 +128,6 @@ int main(int argc, char *argv[])
     {
 
         int i = 0;
-        char member_casual[7] = "member";
 
         token = strtok(str, s);
         for (i = 0; token != NULL; i++)
