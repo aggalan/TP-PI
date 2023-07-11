@@ -348,5 +348,7 @@ int main(int argc, char *argv[])
 
     freeBikeSharing(bikeSharing);
 
+    return OK;
+
 }
 
