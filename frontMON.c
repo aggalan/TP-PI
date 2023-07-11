@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     }
     
     fgets(str, sizeof(str), fp_stations);  // Check if the order of files is correct or is inverted.
-    if(str[0] != 's')
+    if(str[0] == 's')
     {
         perror("Error in order of .csv files");
         return INCORRECT_FILE;
