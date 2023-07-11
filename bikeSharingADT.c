@@ -31,7 +31,7 @@ typedef struct node
 
 typedef TNode *TList;
 
-typedef struct idSort   // CAMBIO
+typedef struct idSort   
 {
     int id;
     TList station;
@@ -40,10 +40,10 @@ typedef struct idSort   // CAMBIO
 
 typedef struct bikeSharingCDT
 {
-    TList first; // puntero a la primera estacion
+    TList first; 
     TList sIter;
     TList eIter;
-    size_t cant; // cantidad de estaciones
+    size_t cant; 
     int **matrix;
     idSort * arr;
     int limit_start_year;
@@ -66,7 +66,7 @@ bikeSharingADT newBikeSharing(int start_year, int end_year)
     return new;
 }
 
-void freeBikeSharing(bikeSharingADT bs) // hacer
+void freeBikeSharing(bikeSharingADT bs) 
 {
     TList curr = bs->first, aux;
 
@@ -78,7 +78,7 @@ void freeBikeSharing(bikeSharingADT bs) // hacer
         curr = aux;
     }
 
-    if (bs->matrix != NULL) //si se reservo memoria
+    if (bs->matrix != NULL) 
     {
         for (int i = 0; i < bs->cant; i++)
         {
@@ -139,11 +139,11 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag, in
         new->id = id;
         new->station_name = malloc(strlen(station_name) + 1);
         strcpy(new->station_name, station_name); 
-        new->member_trips = 0; // inicializo los viajes de miembros en 0
-        new->circular_trips = 0; // inicializo los viajes circulares
+        new->member_trips = 0; 
+        new->circular_trips = 0; 
         for (int i = 0; i < MONTHS; i++)
         {
-            new->months[i] = 0; // inicializo los viajes del mes en 0
+            new->months[i] = 0; 
         }
 
         new->tail = list;
@@ -158,7 +158,7 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag, in
         return list;
     }
 
-    return list; // Ya existia esa estacion en la lista
+    return list; 
 }
 
 int addStation(bikeSharingADT bikeSharing, char *station_name, int id)
@@ -211,12 +211,12 @@ int setMatrix(bikeSharingADT bs, int *cant)
     if(setArr(bs))
         return 1;
         
-    bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
+    bs->matrix = malloc(bs->cant * sizeof(int *)); 
     MEMORY_CHECK_1(bs->matrix)
 
     for (i = 0; i < bs->cant; i++) 
     {
-        bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
+        bs->matrix[i] = calloc(bs->cant, sizeof(int)); 
         MEMORY_CHECK_1(bs->matrix[i])
     }
 
@@ -224,27 +224,27 @@ int setMatrix(bikeSharingADT bs, int *cant)
     return 0;
 }
 
-// An iterative binary search function.
+
 TList binarySearch(idSort * arr, int l, int r, int id)
 {
     while (l <= r) {
         
         int m = l + (r - l) / 2;
  
-        // Check if x is present at mid
+      
         if (arr[m].id == id)
             return arr[m].station;
  
-        // If x greater, ignore left half
+       
         if (arr[m].id < id)
             l = m + 1;
  
-        // If x is smaller, ignore right half
+        
         else
             r = m - 1;
     }
  
-    // If we reach here, then element was not present
+   
     return NULL;
 }
  
@@ -253,9 +253,6 @@ TList binarySearch(idSort * arr, int l, int r, int id)
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month)
 {
     TList sAux, eAux;
-
-    // Chequeamos que ambos IDs esten en la lista. Si alguno no está retornamos (no queremos agregarlo)
-     // sAux = getIndex(bikeSharing->first, startId, endId, &idxStart, &idxEnd, &flag);
 
     sAux = binarySearch(bikeSharing->arr, bikeSharing->l, bikeSharing->r, startId);
 
@@ -266,29 +263,23 @@ void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, i
         return;
     }
 
-    // Si es miembro agregamos el viaje a la estacion
     if (isMember)
     {
         sAux->member_trips++;
     }
 
-    // Agregamos viaje a la estacion por mes
     sAux->months[month - 1]++;
 
-    // Agregamos los viajes circulares
     if (startId == endId && (year >= bikeSharing->limit_start_year && year <= bikeSharing->limit_end_year))
     {
         sAux->circular_trips++;
     }
 
-    // Si el lugar de comienzo y fin son distintos, lo agregamos directo a la matriz. Si el viaje es circular, si el año esté dentro de los parámetroslo agregamos a la matriz
     else
     {
         bikeSharing->matrix[sAux->index][eAux->index]++;
     }
 }
-
-// para los iteradores poner 1 si es de salida o 0 sino asi modifica ese iterador
 
 static void toBegin(bikeSharingADT bikeSharing, char start)
 {
@@ -412,7 +403,7 @@ q2_struct *q2(bikeSharingADT bikeSharing, int * dim)
 
     *dim = k;
     vec2 = realloc(vec2, k * sizeof(q2_struct));
-    MEMORY_CHECK_NULL(vec2) //Hace falta? En todo caso estamos reduciendo el bloque de memoria utilizada
+    MEMORY_CHECK_NULL(vec2) 
 
     return vec2;
 }
