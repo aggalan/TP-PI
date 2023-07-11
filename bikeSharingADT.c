@@ -7,6 +7,7 @@
 #include "bikeSharing.h"
 
 #define MONTHS 12 // fijarse
+
 #define MEMORY_CHECK_NULL(ptr) if (ptr == NULL) {\
                                       return NULL;\
                                   }\

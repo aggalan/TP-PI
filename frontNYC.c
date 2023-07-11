@@ -7,53 +7,61 @@
 #define MAX_WORD_LENGTH 30
 #define MAX_LINE_LENGTH 100
 #define MAX_NUMBER_LENGTH 15
+
 #define MEMORY_CHECK(ptr) if (ptr == NULL){\
                             perror("Error, insufficient memory");\
                             return 1;\
                           }\
 
+
 enum months {JAN=0, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC};
 
 int main(int argc, char *argv[])
 {
-    FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
 
+    FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
 
     char str[MAX_LINE_LENGTH]; // For storing one .csv line at a time
     const char s[2] = ";";     // ";" is the separating character in both files
 
     errno = 0;
 
-    // Checks for errors in of parameters (amount and order)
-
-    if (argc > 5 || argc < 3)
+    if (argc > 5 || argc < 3) // if true, either the user dindn´t run the executable with both .csv files or exceeded the maximum amount of parameters
     {
         perror("Error in the amount of parameters");
         return 1;
     }
 
+
+    //open both .cvs files in order to extract the information.
+
+
     fp_trips = fopen(argv[1], "r");
     fp_stations = fopen(argv[2], "r"); 
 
-    if(fp_stations == NULL || fp_trips == NULL)
+
+
+    if(fp_stations == NULL || fp_trips == NULL) // if true, one or both files can´t be read, so the program must alert the user
     {
         perror("Error opening file");
         return 1;
     }
 
+
     int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
 
-    if (argc < 4)
+
+    if (argc < 4)  //if true, no year restriction is required, so we add a range that doesn´t affect the results
     {
         limit_start_year = -1;
         limit_end_year = 3000;
     }
-    else if (argc == 4)
+    else if (argc == 4) //if true, only start year is required, so we set that parameter and set the ending year to one that doesn´t affect the results
     {
         limit_start_year = atoi(argv[3]);
         limit_end_year = 3000;                      
     }
-    else if (argc == 5)
+    else if (argc == 5) // we set the start-end parameters to the ones provided by the user. We also check if the range is valid.
     {
         limit_start_year = atoi(argv[3]);
         limit_end_year = atoi(argv[4]);
@@ -64,13 +72,14 @@ int main(int argc, char *argv[])
         }
     }
 
-    fgets(str, sizeof(str), fp_stations); // descarto primera linea y la uso para chequear orden de paramtros;
+    fgets(str, sizeof(str), fp_stations); // saves the first line to check if the order of files is correct or is inverted.
 
     if(str[3] != 't')
     {
         perror("Error in order of .csv files");
         return 1;
     }
+
 
     // Loading process starts
 
@@ -88,10 +97,11 @@ int main(int argc, char *argv[])
     MEMORY_CHECK(token)
 
 
-    //Passes each station data to parameters and sends it to the backend
-
-    fgets(str, sizeof(str), fp_stations); // First line of stations.csv is non important
+    fgets(str, sizeof(str), fp_stations); // discards the first line of the file as it only contains titles.
    
+
+    // Every line of stationsMON.csv is broken-down to variables and the stations information is sent to the backend.
+
 
     while (fgets(str, sizeof(str), fp_stations) != NULL)
     {
@@ -120,6 +130,9 @@ int main(int argc, char *argv[])
         }
     }
 
+
+    // once finished the upload of ALL stations it is compulsory to call setMatrix, so it prepares the data structure to store trips and saves the amount of stations.
+
     if(setMatrix(bikeSharing, &cantStations))
     {
         perror("Error allocating memory");
@@ -127,11 +140,11 @@ int main(int argc, char *argv[])
     }
 
 
+    fgets(str, sizeof(str), fp_trips); // discards the first line of the file as it only contains titles.
 
-    // Passes each trip data to parameters and sends it to the backend (reutilizing str)
 
+    // Every line of bikesNYC.csv is broken-down to variables and the trips information is sent to the backend.
 
-    fgets(str, sizeof(str), fp_trips); // First line of bikes.csv is also non important
 
     while (fgets(str, sizeof(str), fp_trips) != NULL)
     {
@@ -166,120 +179,217 @@ int main(int argc, char *argv[])
          addTrip(bikeSharing, is_member, start_id, end_id, start_year, start_month);
     }
 
+    //Frees the resourses used to break-down the information from the .csv files
+
     free(tokenAux);
     free(sName);
 
 
-    //We need to pass the numbers to a string format
-    char pasajeString[MAX_NUMBER_LENGTH];
-    char pasajeString2[MAX_NUMBER_LENGTH];
-    char pasajesMonths[MONTHS][MAX_NUMBER_LENGTH]; 
+    //As the html functions only accept string format tu upload a row, some variables are needed.
+
+    char toString1[MAX_NUMBER_LENGTH];
+    char toString2[MAX_NUMBER_LENGTH];
+    char toString3[MONTHS][MAX_NUMBER_LENGTH]; 
 
 
-    //QUERY 1
 
-    q1_struct *vec1 = q1(bikeSharing, 1);
+
+    // QUERY 1: .csv and .html files are completed
+
+
+
+
+    // First we fill an array with structs that the call of the function "q1" returns
+
+    q1_struct *vec1 = q1(bikeSharing, 1); 
+
     MEMORY_CHECK(vec1)
 
-    htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips");
+    // Starts a new HTML table with the titles
+
+    htmlTable table1 = newTable("query1.html", 2, "Station", "StartedTrips"); 
+    
+    // Opens the .csv so that it can be filled
+
     fp_q1 = fopen("query1.csv", "w");
+
+    // Completes the first line with titles
+
     fprintf(fp_q1, "Station;StartedTrips\n");
+
+    // Adds all the rows
 
     for (int i = 0; i < cantStations; i++)
     { 
 
         fprintf(fp_q1, "%s;%ld\n", vec1[i].station_name, vec1[i].trips);
 
-        sprintf(pasajeString2, "%ld",vec1[i].trips );
-        addHTMLRow(table1, vec1[i].station_name, pasajeString2);
+        sprintf(toString1, "%ld",vec1[i].trips );
+        addHTMLRow(table1, vec1[i].station_name, toString1);
 
     }
+
+    //Closes the files and frees the resourses used in the first query
 
     fclose(fp_q1);
     closeHTMLTable(table1);
     freeVec1(bikeSharing, vec1);
 
 
-    //QUERY 2
+
+
+
+
+    // QUERY 2: .csv and .html files are completed
+
+
+
+
+
+    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
 
     q2_struct *vec2 = q2(bikeSharing, &dim);
+
     MEMORY_CHECK(vec2)
 
+    // Starts a new HTML table with the titles
+
     htmlTable table2 = newTable("query2.html", 4, "Station A", "Station B", "Trips A -> B", "Trips B -> A");
+
+    // Opens the .csv so that it can be filled
+
     fp_q2 = fopen("query2.csv", "w");
+
+    // Completes the first line with titles
+
     fprintf(fp_q2, "StationA;StationB;Trips A -> B;Trips B -> A\n");
+
+    // Adds all the rows
 
     for (int i = 0; i < dim; i++)  // la longitud de este ciclo esta mal
     { 
 
         fprintf(fp_q2, "%s;%s;%d;%d\n", vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start);
         
-        sprintf(pasajeString, "%d",vec2[i].trips_end_start );
-        sprintf(pasajeString2, "%d",vec2[i].trips_start_end );
+        sprintf(toString1, "%d",vec2[i].trips_end_start );
+        sprintf(toString2, "%d",vec2[i].trips_start_end );
 
-        addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, pasajeString2, pasajeString);
+        addHTMLRow(table2, vec2[i].start_station, vec2[i].end_station, toString2, toString1);
     }
+
+
+    //Closes the files and frees the resourses used in the second query
 
     fclose(fp_q2);
     closeHTMLTable(table2);
     freeVec2(bikeSharing, vec2, dim);
 
 
-    //QUERY 3
+
+
+
+
+    // QUERY 3: .csv and .html files are completed
+
+
+
+
+
+
+    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
 
     q3_struct *vec3 = q3(bikeSharing);
+
     MEMORY_CHECK(vec3)
 
+    // Starts a new HTML table with the titles
+
     htmlTable table3 = newTable("query3.html", 13, "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D", "Station");
+
+    // Opens the .csv so that it can be filled
+
     fp_q3 = fopen("query3.csv", "w"); 
+
+    // Completes the first line with titles
+
     fprintf(fp_q3, "J;F;M;A;M;J;J;A;S;O;N;D\n");
 
+    // Adds all the rows
 
     for (int i = 0; i < cantStations; i++)
     { 
 
          for (int m = JAN; m <= DEC; m++)
         {
-            sprintf(pasajesMonths[m], "%d", vec3[i].months[m]);
+            sprintf(toString3[m], "%d", vec3[i].months[m]);
             fprintf(fp_q3, "%d;", vec3[i].months[m]);
         }
         fprintf(fp_q3, "%s\n", vec3[i].station_name);
 
-        addHTMLRow(table3, pasajesMonths[JAN], pasajesMonths[FEB], pasajesMonths[MAR], pasajesMonths[APR], pasajesMonths[MAY], pasajesMonths[JUN], pasajesMonths[JUL], pasajesMonths[AUG], pasajesMonths[SEP], pasajesMonths[OCT], pasajesMonths[NOV], pasajesMonths[DEC], vec3[i].station_name);
+        addHTMLRow(table3, toString3[JAN], toString3[FEB], toString3[MAR], toString3[APR], toString3[MAY], toString3[JUN], toString3[JUL], toString3[AUG], toString3[SEP], toString3[OCT], toString3[NOV], toString3[DEC], vec3[i].station_name);
 
     }    
+
+     //Closes the files and frees the resourses used in the third query
+
     fclose(fp_q3);
     closeHTMLTable(table3);
     freeVec3(bikeSharing, vec3);
 
 
-    //QUERY 4
+
+
+
+
+    // QUERY 4: .csv and .html files are completed
+
+
+
+
+
+
+    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
 
     q1_struct *vec4 = q1(bikeSharing, 4);
+
     MEMORY_CHECK(vec4)
 
+    // Starts a new HTML table with the titles
+
     htmlTable table4 = newTable("query4.html", 2, "Station", "RoundingTrips");
+
+    // Opens the .csv so that it can be filled
+
     fp_q4 = fopen("query4.csv", "w");
+
+    // Completes the first line with titles
+
     fprintf(fp_q4, "Station;RoundingTrips\n");
+
+    // Adds all the rows
 
     for (int i = 0; i < cantStations; i++)
     { 
 
         fprintf(fp_q4, "%s;%ld\n", vec4[i].station_name, vec4[i].trips);
 
-        sprintf(pasajeString, "%ld",vec4[i].trips );
-        addHTMLRow(table4, vec4[i].station_name, pasajeString);
+        sprintf(toString1, "%ld",vec4[i].trips );
+        addHTMLRow(table4, vec4[i].station_name, toString1);
 
     }
+
+     //Closes the files and frees the resourses used in the fourth query
 
     fclose(fp_q4);
     closeHTMLTable(table4);
     freeVec1(bikeSharing, vec4);
 
-
+     //Closes the .csv files
 
     fclose(fp_stations);
     fclose(fp_trips);
+
+    //frees the resourses used in the backend
 
     freeBikeSharing(bikeSharing); 
 }
