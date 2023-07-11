@@ -16,36 +16,36 @@ typedef struct q1_struct {
 typedef struct q2_struct {
     char * start_station;
     char * end_station;
-    int trips_start_end; // es una matriz de ints, recibe ints
+    int trips_start_end;
     int trips_end_start;
 } q2_struct;
 
 typedef struct q3_struct {
     char * station_name;
-    int months[MONTHS];  // esta en ints en el back
+    int months[MONTHS]; 
 } q3_struct;
 
-/*libera toda memoria reservada por el TAD*/
+/*Frees up the resourdces used by the ADT*/
 void freeBikeSharing(bikeSharingADT bs);
 
-// libera el vector generado por la query 1
+// Frees up the resources used by a q1_struct style vec
 void freeVec1(bikeSharingADT bs, q1_struct * vec1);
 
-// libera el vector generado por la query 2
+// Frees up the resources used by a q2_struct style vec
 void freeVec2(bikeSharingADT bs, q2_struct * vec2, int dim);
 
-// libera el vector generado por la query 3
+// Frees up the resources used by a q3_struct style vec
 void freeVec3(bikeSharingADT bs, q3_struct * vec3);
 
-/*Retorna un nuevo bikesharing. Al principio esta vacio*/
+/*Returns a new bikeSharing, which is empty at first*/
 bikeSharingADT newBikeSharing(int start_year, int end_year);
 
-/*Almacena una nueva estacion en orden alfabetico el TAD*/
+/*Stores a new station in alphabetical order in the TAD. Returns int to check for memory errors*/
 int addStation(bikeSharingADT bikeSharing, char * station, int id);
 
 /*
-Reserva espacio para la matriz y pone los indices.
-Se debe llamar antes de empezar a cargar los viajes.
+Reserves space for the matrix and sets the indexes.
+It must be called before starting to load the trips.
 */
 int setMatrix(bikeSharingADT bs, int * cant);
 
