@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
+    // First we fill an array with structs that the call of the function "q3" returns (also array dimension is saved)
 
     q3_struct *vec3 = q3(bikeSharing);
 
@@ -346,7 +346,7 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
+    // First we fill an array with structs that the call of the function "q1" returns (also array dimension is saved)
 
     q1_struct *vec4 = q1(bikeSharing, 4);
 
