@@ -7,6 +7,8 @@
 #define MAX_WORD_LENGTH 30 
 #define MAX_LINE_LENGTH 100 
 #define MAX_NUMBER_LENGTH 15 
+#define MAX_YEAR 3000 
+#define MIN_YEAR -1
 #define MEMORY_CHECK(ptr) if (ptr == NULL){\
                             perror("Error, insufficient memory");\
                             return NO_MEMORY;\
@@ -48,13 +50,13 @@ int main(int argc, char *argv[])
 
     if (argc < 4) //if true, no year restriction is required so limits are set so that every year is valid
     {
-        limit_start_year = -1;
-        limit_end_year = 3000;
+        limit_start_year = MIN_YEAR;
+        limit_end_year = MAX_YEAR;
     }
     else if (argc == 4) //if true, only start year is required
     {
         limit_start_year = atoi(argv[3]);
-        limit_end_year = 3000;                      
+        limit_end_year = MAX_YEAR;                      
     }
     else if (argc == 5)
     {
