@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
     FILE *fp_stations, *fp_trips, *fp_q1, *fp_q2, *fp_q3, *fp_q4;
 
-    char str[MAX_LINE_LENGTH]; // For storing one .csv line at a time
+    char str[MAX_LINE_LENGTH];
     const char s[2] = ";";     // ";" is the separating character in both files
 
     errno = 0;
@@ -33,15 +33,12 @@ int main(int argc, char *argv[])
     }
 
 
-    //open both .cvs files in order to extract the information.
-
-
     fp_trips = fopen(argv[1], "r");
     fp_stations = fopen(argv[2], "r"); 
 
 
 
-    if(fp_stations == NULL || fp_trips == NULL) // if true, one or both files can´t be read, so the program must alert the user
+    if(fp_stations == NULL || fp_trips == NULL) // if true, one or both files can´t be read
     {
         perror("Error opening file");
         return 1;
@@ -51,17 +48,17 @@ int main(int argc, char *argv[])
     int start_year, start_month, start_id, end_id, is_member, limit_start_year, limit_end_year;
 
 
-    if (argc < 4)  //if true, no year restriction is required, so we add a range that doesn´t affect the results
+    if (argc < 4)  //if true, no year restriction is required
     {
         limit_start_year = -1;
         limit_end_year = 3000;
     }
-    else if (argc == 4) //if true, only start year is required, so we set that parameter and set the ending year to one that doesn´t affect the results
+    else if (argc == 4) //if true, only start year is required
     {
         limit_start_year = atoi(argv[3]);
         limit_end_year = 3000;                      
     }
-    else if (argc == 5) // we set the start-end parameters to the ones provided by the user. We also check if the range is valid.
+    else if (argc == 5)
     {
         limit_start_year = atoi(argv[3]);
         limit_end_year = atoi(argv[4]);
@@ -72,7 +69,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    fgets(str, sizeof(str), fp_stations); // saves the first line to check if the order of files is correct or is inverted.
+    fgets(str, sizeof(str), fp_stations); // Check if the order of files is correct or is inverted.
 
     if(str[3] != 't')
     {
@@ -84,10 +81,7 @@ int main(int argc, char *argv[])
     // Loading process starts
 
     bikeSharingADT bikeSharing = newBikeSharing(limit_start_year, limit_end_year);
-
     MEMORY_CHECK(bikeSharing);
-
-    //Declares variables for file reading
 
     char *sName = malloc(MAX_LINE_LENGTH), *token = malloc(MAX_LINE_LENGTH), *tokenAux = token;
     int sId, cantStations, dim;
@@ -113,7 +107,7 @@ int main(int argc, char *argv[])
             {
                 sId = atoi(token);
             }
-            if (i == 0)
+            else if (i == 0)
             {
                 strcpy(sName, token);
             }
@@ -158,15 +152,15 @@ int main(int argc, char *argv[])
                 sscanf(token, "%d-%d", &start_year, &start_month);
             }
 
-            if (i == 1)
+            else if (i == 1)
             {
                 start_id = atoi(token);
             }
-            if (i == 3)
+            else if (i == 3)
             {
                 end_id = atoi(token);
             }
-            if (i == 5)
+            else if (i == 5)
             {
                 is_member = token[0] == 'm';
             }
@@ -197,7 +191,7 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q1" returns
+    // First we fill an array with structs with the info needed for the query
 
     q1_struct *vec1 = q1(bikeSharing, 1); 
 
@@ -244,10 +238,9 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q2" returns (also array dimension is saved)
+    // First we fill an array with structs with the info needed for the query (also array dimension is saved)
 
     q2_struct *vec2 = q2(bikeSharing, &dim);
-
     MEMORY_CHECK(vec2)
 
     // Starts a new HTML table with the titles
@@ -294,10 +287,9 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q3" returns (also array dimension is saved)
+    // First we fill an array with structs with the info needed for the query 
 
     q3_struct *vec3 = q3(bikeSharing);
-
     MEMORY_CHECK(vec3)
 
     // Starts a new HTML table with the titles
@@ -346,8 +338,8 @@ int main(int argc, char *argv[])
 
 
 
-    // First we fill an array with structs that the call of the function "q1" returns (also array dimension is saved)
-
+    // First we fill an array with structs with the info needede for the query
+    
     q1_struct *vec4 = q1(bikeSharing, 4);
 
     MEMORY_CHECK(vec4)
