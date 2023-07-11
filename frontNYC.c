@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
 
     }
 
-    //Closes the files and frees the resourses used in the first query
+    //Closes the files and frees the resources used in the first query
 
     fclose(fp_q1);
     closeHTMLTable(table1);
@@ -264,7 +264,7 @@ int main(int argc, char *argv[])
 
     // Adds all the rows
 
-    for (int i = 0; i < dim; i++)  // la longitud de este ciclo esta mal
+    for (int i = 0; i < dim; i++) 
     { 
 
         fprintf(fp_q2, "%s;%s;%d;%d\n", vec2[i].start_station, vec2[i].end_station, vec2[i].trips_start_end, vec2[i].trips_end_start);
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
     }
 
 
-    //Closes the files and frees the resourses used in the second query
+    //Closes the files and frees the resources used in the second query
 
     fclose(fp_q2);
     closeHTMLTable(table2);
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 
     }    
 
-     //Closes the files and frees the resourses used in the third query
+     //Closes the files and frees the resources used in the third query
 
     fclose(fp_q3);
     closeHTMLTable(table3);
@@ -376,7 +376,7 @@ int main(int argc, char *argv[])
 
     }
 
-     //Closes the files and frees the resourses used in the fourth query
+     //Closes the files and frees the resources used in the fourth query
 
     fclose(fp_q4);
     closeHTMLTable(table4);
@@ -387,7 +387,7 @@ int main(int argc, char *argv[])
     fclose(fp_stations);
     fclose(fp_trips);
 
-    //frees the resourses used in the backend
+    //frees the resources used in the backend
 
     freeBikeSharing(bikeSharing); 
 }
