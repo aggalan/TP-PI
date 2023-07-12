@@ -28,20 +28,20 @@ typedef struct q3_struct {
 /*Frees up the resources used by the ADT*/
 void freeBikeSharing(bikeSharingADT bs);
 
-// Frees up the resources used by a q1_struct style array
+/*Frees up the resources used by a q1_struct style array*/ 
 void freeVec1(bikeSharingADT bs, q1_struct * vec1);
 
-// Frees up the resources used by a q2_struct style array
+/*Frees up the resources used by a q2_struct style array*/ 
 void freeVec2(bikeSharingADT bs, q2_struct * vec2, int dim);
 
-// Frees up the resources used by a q3_struct style array
+/*Frees up the resources used by a q3_struct style array*/ 
 void freeVec3(bikeSharingADT bs, q3_struct * vec3);
 
 /*Returns a new bikeSharing, which is empty at first*/
 bikeSharingADT newBikeSharing(int start_year, int end_year);
 
 /*Stores a new station in alphabetical order in the TAD. Returns a boolean character to check for memory allocation errors.
-After adding a station, setmatrix MUST me called again to update the matrix size.
+If a new station is added after the matrix has been set then setMatrix MUST be called upon again.
 */
 int addStation(bikeSharingADT bikeSharing, char * station, int id);
 
@@ -53,11 +53,8 @@ Returns a boolean character to check for memory allocation errors.
 int setMatrix(bikeSharingADT bs, int * cant);
 
 /*Stores a new trip. Addtrip should load the source trip and the destination trip to the matrix
-Before calling addTrip the matrix MUST be set with setMatrix only if addtrip has been called previosuly.
 */ 
 void addTrip(bikeSharingADT bikeSharing, int isMember, int startId, int endId, int year, int month);
-
-
 
 
 /* 
