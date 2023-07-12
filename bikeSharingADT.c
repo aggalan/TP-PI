@@ -50,6 +50,7 @@ typedef struct bikeSharingCDT
     int limit_end_year;
     int l;
     int r;
+    size_t last_index;
 
 } bikeSharingCDT;
 
@@ -122,7 +123,7 @@ void freeVec3(bikeSharingADT bs, q3_struct * vec3)
 }
 
 
-static TList addStationRec(TList list, char *station_name, int id, int *flag, int * memFlag)
+static TList addStationRec(TList list, char *station_name, int id, int *flag, int * memFlag, int * last_index)
 {
     int c;
     if (list == NULL || (c = strcmp(station_name, list->station_name)) < 0)
@@ -130,17 +131,22 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag, in
         errno = 0;
         TList new = malloc(sizeof(TNode));
 
-        if (errno == ENOMEM || new == NULL)
+        if (errno == ENOMEM)
         {
             *memFlag = 1;
             return NULL;
         }
 
         new->id = id;
+
         new->station_name = malloc(strlen(station_name) + 1);
+
         strcpy(new->station_name, station_name); 
+
         new->member_trips = 0; 
+
         new->circular_trips = 0; 
+
         for (int i = 0; i < MONTHS; i++)
         {
             new->months[i] = 0; 
@@ -154,18 +160,20 @@ static TList addStationRec(TList list, char *station_name, int id, int *flag, in
 
     if (c > 0)
     {
-        list->tail = addStationRec(list->tail, station_name, id, flag, memFlag);
+        (*last_index)++;
+        list->tail = addStationRec(list->tail, station_name, id, flag, memFlag, last_index);
         return list;
     }
 
-    return list; 
+    return list;
 }
 
 int addStation(bikeSharingADT bikeSharing, char *station_name, int id)
 {
-    int flag = 0, memFlag = 0;
-    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag, &memFlag);
+    int flag = 0, memFlag = 0, last_index=0;
+    bikeSharing->first = addStationRec(bikeSharing->first, station_name, id, &flag, &memFlag, &last_index);
     bikeSharing->cant += flag; 
+    bikeSharing->last_index = last_index;
     return memFlag;
 }
 
@@ -177,27 +185,56 @@ static int idCmp(const void *e1, const void *e2)
     return (ptr1->id - ptr2->id);
 }
 
-int setArr(bikeSharingADT bs) 
+int setArr(bikeSharingADT bs, int index) 
 {
-    errno = 0;
-    bs->arr = malloc(bs->cant * sizeof(idSort));
-    MEMORY_CHECK_1(bs->arr)
+    if (index < 0) {
+        errno = 0;
+        bs->arr = malloc(bs->cant * sizeof(idSort));
+        MEMORY_CHECK_1(bs->arr)
 
-    TList aux = bs->first;
+        TList aux = bs->first;
 
-    for(int i = 0; i < bs->cant; i++)
-    {   
-        aux->index = i;
-        bs->arr[i].id = aux->id;
-        bs->arr[i].station = aux;
+        for(int i = 0; i < bs->cant; i++)
+        {   
+            aux->index = i;
+            bs->arr[i].id = aux->id;
+            bs->arr[i].station = aux;
 
-        aux = aux->tail;
+            aux = aux->tail;
+        }
+
+        qsort(bs->arr, bs->cant, sizeof(idSort), idCmp);
+
+        bs->l=0;
+        bs->r=bs->cant-1;
     }
+    else {
+        int id;
+        TList aux = bs->first;
+        for (int i=0; i<index; i++) {
+            aux = aux->tail;
+        }
+        id = aux->id;
 
-    qsort(bs->arr, bs->cant, sizeof(idSort), idCmp);
+        bs->arr = realloc(bs->arr, bs->cant * sizeof(idSort));
+        MEMORY_CHECK_1(bs->arr)
 
-    bs->l=0;
-    bs->r=bs->cant-1;
+        bs->arr[bs->cant-1].id = id;
+        bs->arr[bs->cant-1].station = aux;
+
+        qsort(bs->arr, bs->cant, sizeof(idSort), idCmp);
+
+        bs->l=0;
+        bs->r=bs->cant-1;
+
+        aux->index = bs->last_index;
+        aux=aux->tail;
+
+        for (int i=index+1; i<bs->cant; i++) {
+            aux->index = i; 
+            aux=aux->tail;
+        }
+    }
 
     return 0;
 
@@ -205,22 +242,62 @@ int setArr(bikeSharingADT bs)
 
 int setMatrix(bikeSharingADT bs, int *cant)
 {
-    int i;
-    errno = 0;
+    if (bs->matrix == NULL) {
+        int i;
+        errno = 0;
 
-    if(setArr(bs))
-        return 1;
+        if(setArr(bs, -1))
+            return 1;
         
-    bs->matrix = malloc(bs->cant * sizeof(int *)); 
-    MEMORY_CHECK_1(bs->matrix)
+        bs->matrix = malloc(bs->cant * sizeof(int *)); // reservo memoria filas
 
-    for (i = 0; i < bs->cant; i++) 
-    {
-        bs->matrix[i] = calloc(bs->cant, sizeof(int)); 
-        MEMORY_CHECK_1(bs->matrix[i])
+        if (errno == ENOMEM)
+        {
+            return 1;
+        }
+
+        for (i = 0; i < bs->cant; i++) 
+        {
+            bs->matrix[i] = calloc(bs->cant, sizeof(int)); // reservo fila columnas
+
+            if (errno == ENOMEM)
+            {
+                return 1;
+            }
+        }
+    }
+    else {
+       
+        int i, j;
+        int index = bs->last_index;
+
+        setArr(bs, index);
+
+
+        bs->matrix = realloc(bs->matrix, bs->cant * sizeof(int *));
+        MEMORY_CHECK_1(bs->matrix)
+
+        for (i = bs->cant - 1; i > index; i--) {
+            bs->matrix[i] = bs->matrix[i - 1];
+        } 
+        bs->matrix[index] = calloc(bs->cant, sizeof(int));
+        MEMORY_CHECK_1(bs->matrix[index])
+
+
+
+        for (i = 0; i < bs->cant; i++) {
+            bs->matrix[i] = realloc(bs->matrix[i], bs->cant * sizeof(int));
+            MEMORY_CHECK_1(bs->matrix[i])
+
+            for (j = bs->cant - 1; j > index; j--) {
+                bs->matrix[i][j] = bs->matrix[i][j - 1];
+            }
+            bs->matrix[i][index] = 0;
+        }
     }
 
     *cant = bs->cant;
+
     return 0;
 }
 
