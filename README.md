@@ -14,9 +14,9 @@ EL programa genera 4 queries distintas, en base a la información extraida de lo
 
  Aclaración: Para el query 4 se pueden introducir años limites, tanto inicial como final. 
 
- Aclaración: Todos los archivos provistos por el grupo deben estar en el mismo directorio, en caso contrario se detallara que hacer en cada caso.
+ Aclaración: Todos los archivos .csv deben estar en el mismo directorio, en caso contrario se detallara que hacer en cada caso.
 
- La información de cada query se guarda en dos archivos iguales, uno .csv y otro .html.
+ La información de cada query se guarda en dos archivos, uno .csv y otro .html.
 
 
 
